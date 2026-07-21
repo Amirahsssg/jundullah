@@ -929,7 +929,7 @@
       <div class="container">
         <div class="page-heading">
           <div class="eyebrow">Knowing Allah</div>
-          <h2>Selected Names of Allah</h2>
+          <h2>The 99 Names of Allah</h2>
           <p class="lead">
             Search the names below, then click a card to open a fuller explanation of its meaning,
             spiritual significance, and a practical reflection for daily life.
@@ -946,7 +946,7 @@
         <div id="asmaulGrid" class="grid grid-4"></div>
 
         <div class="notice" style="margin-top:25px">
-          This starter version contains a selected set rather than the complete 99-name collection. Add the remaining entries only after checking a reliable scholarly source.
+          This page presents the commonly transmitted collection of 99 Names. English labels are approximate; study the divine names through the Qur'an, authentic Sunnah, and reliable scholarship.
         </div>
       </div>
     </section>
@@ -1002,70 +1002,110 @@
     };
 
     const namesOfAllah = [
-      ["الرَّحْمَنُ", "Ar-Rahman", "The Entirely Merciful"],
-      ["الرَّحِيمُ", "Ar-Rahim", "The Especially Merciful"],
-      ["الْمَلِكُ", "Al-Malik", "The King and Sovereign"],
-      ["الْقُدُّوسُ", "Al-Quddus", "The Absolutely Pure"],
-      ["السَّلَامُ", "As-Salam", "The Source of Peace"],
-      ["الْمُؤْمِنُ", "Al-Mu'min", "The Giver of Security"],
-      ["الْمُهَيْمِنُ", "Al-Muhaymin", "The Guardian"],
-      ["الْعَزِيزُ", "Al-Aziz", "The Almighty"],
-      ["الْجَبَّارُ", "Al-Jabbar", "The Compeller and Restorer"],
-      ["الْمُتَكَبِّرُ", "Al-Mutakabbir", "The Supremely Great"],
-      ["الْخَالِقُ", "Al-Khaliq", "The Creator"],
-      ["الْبَارِئُ", "Al-Bari", "The Originator"]
+      ["الرَّحْمَنُ", "Ar-Rahman", "The Entirely Merciful", "Allah's mercy is vast and encompasses all creation.", "Recognise every blessing as mercy and practise mercy toward others."],
+      ["الرَّحِيمُ", "Ar-Rahim", "The Especially Merciful", "Allah bestows continuous and special mercy upon His servants.", "Never despair of Allah's mercy; return to Him sincerely and forgive others."],
+      ["الْمَلِكُ", "Al-Malik", "The King and Sovereign", "Allah alone possesses absolute ownership and authority over creation.", "Hold possessions and positions humbly, remembering that they are trusts."],
+      ["الْقُدُّوسُ", "Al-Quddus", "The Absolutely Pure", "Allah is completely free from every defect, weakness, and imperfection.", "Purify your intentions and conduct while acknowledging human limitations."],
+      ["السَّلَامُ", "As-Salam", "The Source of Peace", "Allah is perfect and is the source of true peace, safety, and wholeness.", "Seek peace through obedience and make others safe from your words and actions."],
+      ["الْمُؤْمِنُ", "Al-Mu'min", "The Giver of Security", "Allah confirms truth and grants security and reassurance to His servants.", "Trust Allah while taking responsible steps to protect yourself and others."],
+      ["الْمُهَيْمِنُ", "Al-Muhaymin", "The Guardian", "Allah watches over, preserves, and witnesses all things with complete knowledge.", "Act with integrity even when no person is watching."],
+      ["الْعَزِيزُ", "Al-Aziz", "The Almighty", "Allah possesses complete might, honour, and invincibility.", "Seek dignity through obedience rather than status or domination."],
+      ["الْجَبَّارُ", "Al-Jabbar", "The Compeller and Restorer", "Allah's power is irresistible, and He restores and supports whom He wills.", "Turn to Allah in brokenness and never use strength to oppress."],
+      ["الْمُتَكَبِّرُ", "Al-Mutakabbir", "The Supremely Great", "True greatness and majesty belong to Allah alone.", "Replace arrogance with gratitude and humility."],
+      ["الْخَالِقُ", "Al-Khaliq", "The Creator", "Allah brings creation into existence with knowledge, wisdom, and purpose.", "Observe creation thoughtfully and treat life as meaningful."],
+      ["الْبَارِئُ", "Al-Bari", "The Originator", "Allah originates creation and brings it forth in distinct and fitting forms.", "Appreciate diversity in creation and resist judging worth by appearance."],
+      ["الْمُصَوِّرُ", "Al-Musawwir", "The Fashioner", "Allah gives every created being its form and distinctive qualities.", "Value the wisdom and variety visible throughout creation."],
+      ["الْغَفَّارُ", "Al-Ghaffar", "The Constant Forgiver", "Allah repeatedly forgives those who sincerely repent and return to Him.", "Keep repenting after mistakes and do not become proud of your own record."],
+      ["الْقَهَّارُ", "Al-Qahhar", "The All-Subduing", "All creation is subject to Allah's irresistible authority and power.", "Surrender pride and harmful desires to the guidance of Allah."],
+      ["الْوَهَّابُ", "Al-Wahhab", "The Supreme Bestower", "Allah gives freely and generously without being diminished.", "Receive blessings gratefully and give to others without demanding repayment."],
+      ["الرَّزَّاقُ", "Ar-Razzaq", "The Provider", "Allah provides every creature with what sustains it according to His wisdom.", "Seek lawful provision, work responsibly, and remain grateful."],
+      ["الْفَتَّاحُ", "Al-Fattah", "The Opener and Judge", "Allah opens what is closed and judges between His servants with truth.", "Ask Allah to open beneficial paths and accept His just judgment."],
+      ["اَلْعَلِيْمُ", "Al-Alim", "The All-Knowing", "Allah's knowledge perfectly encompasses the seen, unseen, past, present, and future.", "Pursue beneficial knowledge and remain humble about what you do not know."],
+      ["الْقَابِضُ", "Al-Qabid", "The Withholder", "Allah constricts provision and circumstances according to perfect wisdom.", "Meet periods of limitation with patience, lawful effort, and trust."],
+      ["الْبَاسِطُ", "Al-Basit", "The Extender", "Allah expands provision, opportunity, and ease according to His wisdom.", "Use times of abundance generously and without arrogance."],
+      ["الْخَافِضُ", "Al-Khafid", "The One Who Lowers", "Allah lowers whom He wills in accordance with His justice and wisdom.", "Avoid pride and never assume that worldly rank determines true worth."],
+      ["الرَّافِعُ", "Ar-Rafi", "The One Who Raises", "Allah raises people in rank, honour, and nearness according to His wisdom.", "Seek elevation through faith, knowledge, and righteous character."],
+      ["الْمُعِزُّ", "Al-Mu'izz", "The Giver of Honour", "All genuine honour and strength ultimately come from Allah.", "Do not trade principles for approval, influence, or status."],
+      ["المُذِلُّ", "Al-Mudhill", "The One Who Humbles", "Allah removes false honour and humbles whom He wills with justice.", "Remain humble and do not humiliate other people."],
+      ["السَّمِيعُ", "As-Sami", "The All-Hearing", "Allah hears every sound, word, prayer, and unspoken need perfectly.", "Guard your speech and speak to Allah with honesty in prayer."],
+      ["الْبَصِيرُ", "Al-Basir", "The All-Seeing", "Nothing visible or hidden escapes Allah's perfect sight.", "Choose integrity in public and private."],
+      ["الْحَكَمُ", "Al-Hakam", "The Perfect Judge", "Allah judges with complete knowledge, truth, and justice.", "Judge carefully, hear people fairly, and submit to divine guidance."],
+      ["الْعَدْلُ", "Al-Adl", "The Utterly Just", "Allah is perfectly just and never wrongs any part of creation.", "Be fair even when justice challenges your own interests."],
+      ["اللَّطِيفُ", "Al-Latif", "The Most Gentle", "Allah is subtle in knowledge and gentle in how His care reaches His servants.", "Notice quiet blessings and treat vulnerable people gently."],
+      ["الْخَبِيرُ", "Al-Khabir", "The All-Aware", "Allah is fully aware of the inner and outer reality of every matter.", "Examine your motives and avoid judging others from appearances alone."],
+      ["الْحَلِيمُ", "Al-Halim", "The Most Forbearing", "Allah does not hasten punishment despite human disobedience.", "Respond to provocation with restraint and give room for sincere correction."],
+      ["الْعَظِيمُ", "Al-Azim", "The Magnificent", "Allah's greatness is beyond all human measure and comparison.", "Let awareness of divine greatness reduce ego and deepen reverence."],
+      ["الْغَفُورُ", "Al-Ghafur", "The Great Forgiver", "Allah covers sins and forgives those who sincerely turn back to Him.", "Repent without delay and avoid exposing the faults of others."],
+      ["الشَّكُورُ", "Ash-Shakur", "The Most Appreciative", "Allah rewards sincere good deeds generously, even when they seem small.", "Value small acts of goodness and thank people for their efforts."],
+      ["الْعَلِيُّ", "Al-Aliyy", "The Most High", "Allah is exalted above creation in majesty, authority, and perfection.", "Direct worship upward to Allah and do not exalt yourself over people."],
+      ["الْكَبِيرُ", "Al-Kabir", "The Most Great", "Allah alone possesses complete and incomparable greatness.", "Keep worldly power and achievements in proper perspective."],
+      ["الْحَفِيظُ", "Al-Hafiz", "The Preserver", "Allah preserves creation and nothing entrusted to Him is beyond His care.", "Ask for protection while responsibly safeguarding your duties and relationships."],
+      ["المُقيِت", "Al-Muqit", "The Sustainer", "Allah provides nourishment, strength, and what each creature needs.", "Use food and resources responsibly and help meet the needs of others."],
+      ["الْحسِيبُ", "Al-Hasib", "The Reckoner and Sufficient", "Allah takes full account and is sufficient for those who rely upon Him.", "Review your actions honestly and depend on Allah without neglecting effort."],
+      ["الْجَلِيلُ", "Al-Jalil", "The Majestic", "Allah possesses perfect majesty, greatness, and honour.", "Approach worship with reverence and treat sacred matters seriously."],
+      ["الْكَرِيمُ", "Al-Karim", "The Most Generous", "Allah's generosity is abundant, noble, and far beyond what creation deserves.", "Be generous with wealth, time, knowledge, and forgiveness."],
+      ["الرَّقِيبُ", "Ar-Raqib", "The Watchful", "Allah watches over all things and nothing escapes His attention.", "Build self-accountability instead of behaving well only when observed."],
+      ["الْمُجِيبُ", "Al-Mujib", "The Responsive", "Allah hears and responds to supplication in the manner His wisdom determines.", "Pray with hope, patience, humility, and trust in Allah's answer."],
+      ["الْوَاسِعُ", "Al-Wasi", "The All-Encompassing", "Allah's knowledge, mercy, power, and generosity are vast and encompassing.", "Do not restrict divine mercy to your own expectations or group."],
+      ["الْحَكِيمُ", "Al-Hakim", "The All-Wise", "Allah places every matter according to perfect wisdom and knowledge.", "Seek wisdom, think beyond immediate appearances, and trust Allah through uncertainty."],
+      ["الْوَدُودُ", "Al-Wadud", "The Most Loving", "Allah loves His faithful servants and is the source of pure and enduring love.", "Express love through loyalty, mercy, service, and obedience."],
+      ["الْمَجِيدُ", "Al-Majeed", "The Most Glorious", "Allah possesses boundless glory, nobility, and excellence.", "Praise Allah and pursue noble character rather than empty recognition."],
+      ["الْبَاعِثُ", "Al-Ba'ith", "The Resurrector", "Allah will raise creation after death for judgment and accountability.", "Live purposefully and prepare for resurrection through sincere faith and action."],
+      ["الشَّهِيدُ", "Ash-Shahid", "The Witness", "Allah witnesses every event, deed, intention, and hidden reality.", "Be truthful and remember that no injustice or good deed is lost."],
+      ["الْحَقُّ", "Al-Haqq", "The Absolute Truth", "Allah is the ultimate reality and His promise and judgment are true.", "Choose truth over convenience and test claims carefully."],
+      ["الْوَكِيلُ", "Al-Wakil", "The Trustee", "Allah is the perfect guardian and disposer of affairs for those who rely on Him.", "Take responsible action, then entrust outcomes to Allah."],
+      ["الْقَوِيُّ", "Al-Qawiyy", "The All-Strong", "Allah's strength is complete, unlimited, and never diminished.", "Seek strength from Allah and use your abilities to protect rather than dominate."],
+      ["الْمَتِينُ", "Al-Matin", "The Firm", "Allah's power is perfectly firm, constant, and unaffected by weakness.", "Build steadiness through worship, patience, and principled action."],
+      ["الْوَلِيُّ", "Al-Waliyy", "The Protecting Friend", "Allah protects, supports, and guides His believing servants.", "Seek Allah's closeness and become a trustworthy supporter of others."],
+      ["الْحَمِيدُ", "Al-Hamid", "The Praiseworthy", "Allah deserves every form of true praise in ease and hardship.", "Practise gratitude and praise Allah beyond moments of personal comfort."],
+      ["الْمُحْصِي", "Al-Muhsi", "The Accounter", "Allah precisely encompasses and records every detail of creation.", "Do not dismiss small deeds; make your daily choices count."],
+      ["الْمُبْدِئُ", "Al-Mubdi", "The Originator", "Allah begins creation without needing a prior model or helper.", "Recognise your dependence and use creativity responsibly."],
+      ["الْمُعِيدُ", "Al-Mu'id", "The Restorer", "Allah returns creation and will bring it forth again after death.", "Let the certainty of return inspire repentance and purposeful living."],
+      ["الْمُحْيِي", "Al-Muhyi", "The Giver of Life", "Allah gives life to creation and revives as He wills.", "Honour life and ask Allah to revive your heart through guidance."],
+      ["اَلْمُمِيتُ", "Al-Mumit", "The Bringer of Death", "Allah decrees death for every living being at its appointed time.", "Remember mortality without despair and prepare through righteous action."],
+      ["الْحَيُّ", "Al-Hayy", "The Ever-Living", "Allah's life is perfect, eternal, and untouched by death or weakness.", "Rely on the One who never dies and use your limited life well."],
+      ["الْقَيُّومُ", "Al-Qayyum", "The Self-Sustaining", "Allah depends on nothing while all creation continually depends on Him.", "Acknowledge your dependence and seek His help in every affair."],
+      ["الْوَاجِدُ", "Al-Wajid", "The Finder", "Nothing is absent, hidden, or beyond Allah's knowledge and power.", "Turn to Allah when you feel lost or lacking."],
+      ["الْمَاجِدُ", "Al-Maajid", "The Illustrious", "Allah possesses perfect nobility, honour, and abundant goodness.", "Pursue dignity through good character rather than display."],
+      ["الْواحِدُ", "Al-Wahid", "The One", "Allah is one in His lordship, worship, names, and attributes.", "Unify your worship and highest loyalty for Allah alone."],
+      ["الاَحَدُ", "Al-Ahad", "The Unique", "Allah is uniquely one and has no equal, partner, or likeness.", "Reject every rival to sincere worship and dependence upon Allah."],
+      ["الصَّمَدُ", "As-Samad", "The Eternal Refuge", "All creation depends on Allah, while He is free of every need.", "Bring your needs to Allah and avoid treating creation as ultimately self-sufficient."],
+      ["الْقَادِرُ", "Al-Qadir", "The All-Powerful", "Allah has complete power over every possible matter.", "Do not lose hope when circumstances appear impossible."],
+      ["الْمُقْتَدِرُ", "Al-Muqtadir", "The Creator of All Power", "Allah exercises perfect and decisive power over creation.", "Use whatever authority you have with humility and accountability."],
+      ["الْمُقَدِّمُ", "Al-Muqaddim", "The One Who Brings Forward", "Allah advances whom and what He wills according to wisdom.", "Ask to be advanced in goodness rather than merely in status."],
+      ["الْمُؤَخِّرُ", "Al-Mu'akhkhir", "The One Who Delays", "Allah delays whom and what He wills according to perfect wisdom.", "Respond to delay with patience, reflection, and continued effort."],
+      ["الأوَّلُ", "Al-Awwal", "The First", "Allah existed before all creation and has no beginning.", "Begin important matters with remembrance and dependence upon Allah."],
+      ["الآخِرُ", "Al-Akhir", "The Last", "Allah remains after all creation and has no end.", "Set priorities by what endures beyond temporary worldly life."],
+      ["الظَّاهِرُ", "Az-Zahir", "The Manifest", "Allah is supreme over creation and His signs are evident throughout it.", "Observe the signs of Allah with thoughtfulness and gratitude."],
+      ["الْبَاطِنُ", "Al-Batin", "The Hidden", "Allah is beyond the reach of human sight while fully knowing every hidden thing.", "Respect the limits of perception and cultivate sincere inner worship."],
+      ["الْوَالِي", "Al-Wali", "The Governor", "Allah governs and disposes all affairs of creation with wisdom.", "Fulfil responsibilities justly while remembering Allah's ultimate authority."],
+      ["الْمُتَعَالِي", "Al-Muta'ali", "The Most Exalted", "Allah is exalted far above every limitation and false description.", "Keep belief grounded in revelation rather than imagination."],
+      ["الْبَرُّ", "Al-Barr", "The Source of Goodness", "Allah is abundant in kindness, goodness, and gracious care toward His servants.", "Respond to divine kindness by doing good to parents, neighbours, and society."],
+      ["التَّوَابُ", "At-Tawwab", "The Accepter of Repentance", "Allah repeatedly accepts sincere repentance and guides people back to Him.", "Return after every failure and make space for others to reform."],
+      ["الْمُنْتَقِمُ", "Al-Muntaqim", "The Just Avenger", "Allah brings just retribution against persistent wrongdoing as His wisdom determines.", "Leave ultimate vengeance to Allah and pursue justice without cruelty."],
+      ["العَفُوُّ", "Al-Afuww", "The Pardoner", "Allah erases and pardons sins for those whom He forgives.", "Ask for pardon and learn to release personal resentment."],
+      ["الرَّؤُوفُ", "Ar-Ra'uf", "The Most Kind", "Allah shows profound tenderness, compassion, and kindness to His servants.", "Practise considerate kindness, especially toward those in difficulty."],
+      ["مَالِكُ الْمُلْكِ", "Malik-ul-Mulk", "Master of the Kingdom", "All dominion belongs to Allah, who grants and removes authority as He wills.", "Treat influence as a temporary trust and never worship power."],
+      ["ذُوالْجَلَالِ وَالإكْرَامِ", "Dhul-Jalali wal-Ikram", "Lord of Majesty and Honour", "Allah alone possesses perfect majesty and limitless generosity.", "Combine reverence for Allah with hope in His generosity."],
+      ["الْمُقْسِطُ", "Al-Muqsit", "The Equitable", "Allah establishes perfect justice and gives every matter its rightful measure.", "Correct unfairness and give people their due rights."],
+      ["الْجَامِعُ", "Al-Jami", "The Gatherer", "Allah gathers creation, including for the Day of Judgment, without difficulty.", "Build unity around truth and remember the gathering to come."],
+      ["الْغَنِيُّ", "Al-Ghani", "The Self-Sufficient", "Allah is completely free of need while every created being depends on Him.", "Reduce attachment to possessions and recognise your need for Allah."],
+      ["الْمُغْنِي", "Al-Mughni", "The Enricher", "Allah grants sufficiency and enriches whom He wills in varied ways.", "Seek contentment as well as provision, and share abundance responsibly."],
+      ["اَلْمَانِعُ", "Al-Mani", "The Withholder", "Allah prevents and protects according to His knowledge and wisdom.", "Consider that a closed door may contain protection, then continue lawfully."],
+      ["الضَّارَ", "Ad-Darr", "The One Who Permits Distress", "No harm occurs outside Allah's permission, knowledge, and wisdom.", "Seek protection, avoid causing harm, and remain patient without denying pain."],
+      ["النَّافِعُ", "An-Nafi", "The Giver of Benefit", "Every true benefit ultimately reaches creation by Allah's permission.", "Seek beneficial knowledge and become a source of lawful benefit to others."],
+      ["النُّورُ", "An-Nur", "The Light", "Allah is the light of the heavens and earth and guides whom He wills to truth.", "Ask for guidance and let revelation illuminate your choices."],
+      ["الْهَادِي", "Al-Hadi", "The Guide", "Allah guides creation and leads willing hearts toward truth and righteousness.", "Continually ask for guidance and guide others with wisdom rather than force."],
+      ["الْبَدِيعُ", "Al-Badi", "The Incomparable Originator", "Allah creates in unprecedented ways without any prior pattern.", "See originality in creation as a sign and use your talents responsibly."],
+      ["اَلْبَاقِي", "Al-Baqi", "The Everlasting", "Allah alone remains eternally and is untouched by disappearance or decay.", "Invest your heart and effort in what has lasting value."],
+      ["الْوَارِثُ", "Al-Warith", "The Inheritor", "All things return to Allah after their temporary human possessors are gone.", "Use what you possess as a trust and leave behind beneficial good."],
+      ["الرَّشِيدُ", "Ar-Rashid", "The Guide to the Right Path", "Allah directs affairs with perfect wisdom and guides to what is right.", "Seek sound judgment through revelation, consultation, and careful thought."],
+      ["الصَّبُورُ", "As-Sabur", "The Most Patient", "Allah does not act with haste and gives creation time according to His wisdom.", "Develop patience without becoming passive about duties or injustice."]
     ];
 
-    const nameDetails = {
-      "Ar-Rahman": {
-        explanation: "Allah's mercy is vast and extends throughout creation. This name points to mercy that encompasses believers and non-believers in worldly life.",
-        reflection: "Recognise every blessing as an expression of divine mercy, and show mercy to people, animals, and the environment."
-      },
-      "Ar-Rahim": {
-        explanation: "This name emphasises Allah's continuous and special mercy, particularly toward those who believe, repent, and seek Him.",
-        reflection: "Never despair of Allah's mercy. Return through sincere repentance and become more forgiving toward others."
-      },
-      "Al-Malik": {
-        explanation: "Allah is the absolute King and Owner of all creation. Every form of human authority is limited, temporary, and accountable to Him.",
-        reflection: "Hold possessions and positions with humility, remembering that ownership is a trust rather than an independent right."
-      },
-      "Al-Quddus": {
-        explanation: "Allah is completely free from every imperfection, weakness, injustice, and limitation.",
-        reflection: "Purify intentions, speech, and conduct while remembering that human perfection is never equal to divine perfection."
-      },
-      "As-Salam": {
-        explanation: "Allah is perfect and free from defect, and He is the source of true peace, safety, and wholeness.",
-        reflection: "Seek peace through obedience to Allah and become a person from whose words and actions others are safe."
-      },
-      "Al-Mu'min": {
-        explanation: "Allah grants security, confirms truth, and gives reassurance to His servants.",
-        reflection: "Place ultimate trust in Allah while taking responsible steps to protect yourself and others."
-      },
-      "Al-Muhaymin": {
-        explanation: "Allah watches over, preserves, witnesses, and governs all things with complete knowledge.",
-        reflection: "Act with integrity even when no person is watching, because nothing is hidden from Allah."
-      },
-      "Al-Aziz": {
-        explanation: "Allah possesses complete might, honour, and invincibility. Nothing can overcome His will.",
-        reflection: "Seek dignity through obedience rather than arrogance, status, or domination of others."
-      },
-      "Al-Jabbar": {
-        explanation: "Allah is irresistible in power and is also the One who restores what is broken and supports the weak.",
-        reflection: "Turn to Allah in moments of brokenness, and avoid using strength to oppress others."
-      },
-      "Al-Mutakabbir": {
-        explanation: "True greatness and majesty belong to Allah alone. Human pride is misplaced because every ability and blessing is created by Him.",
-        reflection: "Replace arrogance with gratitude, humility, and honest awareness of personal limitations."
-      },
-      "Al-Khaliq": {
-        explanation: "Allah brings creation into existence with knowledge, wisdom, proportion, and purpose.",
-        reflection: "Observe creation thoughtfully and treat life as meaningful rather than accidental or disposable."
-      },
-      "Al-Bari": {
-        explanation: "Allah originates creation and brings it forth in distinct, ordered, and fitting forms.",
-        reflection: "Appreciate diversity in creation and resist judging worth solely by appearance or social preference."
-      }
-    };
+    if (namesOfAllah.length !== 99) {
+      console.error(`Expected 99 Names of Allah, but found ${namesOfAllah.length}.`);
+    }
 
     const islamPillars = [
       {
@@ -1464,29 +1504,39 @@
     }
 
     ["increaseArabic", "increasePageArabic"].forEach(id => {
-      document.getElementById(id).addEventListener("click", () => {
+      const button = document.getElementById(id);
+      if (!button) return;
+
+      button.addEventListener("click", () => {
         state.arabicSize = Math.min(56, state.arabicSize + 3);
         applyArabicSize();
       });
     });
 
     ["decreaseArabic", "decreasePageArabic"].forEach(id => {
-      document.getElementById(id).addEventListener("click", () => {
+      const button = document.getElementById(id);
+      if (!button) return;
+
+      button.addEventListener("click", () => {
         state.arabicSize = Math.max(22, state.arabicSize - 3);
         applyArabicSize();
       });
     });
 
     function renderNames(items) {
-      document.getElementById("asmaulGrid").innerHTML = items.map(item => {
-        const detail = nameDetails[item[1]] || {
-          explanation: "A fuller explanation is being prepared from verified scholarly sources.",
-          reflection: "Reflect on this name with humility and avoid drawing theological conclusions from translation alone."
-        };
+      const grid = document.getElementById("asmaulGrid");
 
+      if (!items.length) {
+        grid.innerHTML = `<div class="status" style="grid-column:1/-1">No matching name was found.</div>`;
+        return;
+      }
+
+      grid.innerHTML = items.map(item => {
+        const number = namesOfAllah.indexOf(item) + 1;
         return `
           <details class="name-card name-detail-card">
             <summary>
+              <span class="surah-number" aria-label="Name number ${number}">${number}</span>
               <div class="name-arabic">${item[0]}</div>
               <h3>${escapeHTML(item[1])}</h3>
               <p class="muted">${escapeHTML(item[2])}</p>
@@ -1494,9 +1544,9 @@
             </summary>
             <div class="name-detail-content">
               <h4>Meaning and significance</h4>
-              <p>${escapeHTML(detail.explanation)}</p>
+              <p>${escapeHTML(item[3])}</p>
               <h4>Personal reflection</h4>
-              <p>${escapeHTML(detail.reflection)}</p>
+              <p>${escapeHTML(item[4])}</p>
               <div class="meaning-note">
                 English labels are approximate translations. The divine names should be understood through the Qur'an, authentic Sunnah, and reliable scholarship.
               </div>
@@ -1508,7 +1558,11 @@
 
     document.getElementById("asmaulSearch").addEventListener("input", event => {
       const q = event.target.value.trim().toLowerCase();
-      renderNames(namesOfAllah.filter(item => item[1].toLowerCase().includes(q) || item[2].toLowerCase().includes(q)));
+      renderNames(namesOfAllah.filter(item =>
+        item[0].includes(q) ||
+        item[1].toLowerCase().includes(q) ||
+        item[2].toLowerCase().includes(q)
+      ));
     });
 
     function renderPillars(targetId, items, type) {
