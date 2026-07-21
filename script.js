@@ -883,7 +883,16 @@ const HADITH_CDN_BASE = "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/ed
             <div class="prophet-verse-arabic" lang="ar" dir="rtl">${escapeHTML(passage.arabic)}</div>
             <p class="prophet-translation">${escapeHTML(passage.english)}</p>
             ${passage.commentary
-              ? `<div class="prophet-commentary"><h3>Commentary from Tafsir Ibn Kathir</h3><p>${escapeHTML(passage.commentary)}</p></div>`
+              ? `<details class="prophet-commentary">
+                   <summary>
+                     <span>Read detailed commentary</span>
+                     <span class="commentary-chevron" aria-hidden="true">⌄</span>
+                   </summary>
+                   <div class="prophet-commentary-content">
+                     <div class="translation-label">Tafsir Ibn Kathir</div>
+                     <p>${escapeHTML(passage.commentary)}</p>
+                   </div>
+                 </details>`
               : `<div class="meaning-note">Detailed commentary could not be loaded. The Qur'anic text and translation above are still available.</div>`}
             <a class="source-link" href="https://quran.com/${surah}/${ayah}" target="_blank" rel="noopener noreferrer">Open this verse on Quran.com ↗</a>
           </section>

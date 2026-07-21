@@ -706,14 +706,45 @@
 
     .prophet-commentary {
       margin-top: 25px;
+      overflow: hidden;
+      border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 22px;
       color: var(--muted);
       background: var(--surface-2);
     }
 
-    .prophet-commentary h3 { color: var(--text); }
-    .prophet-commentary p { margin-bottom: 0; white-space: pre-line; }
+    .prophet-commentary summary {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 17px 20px;
+      color: var(--primary);
+      cursor: pointer;
+      font-weight: 850;
+      background: var(--surface);
+    }
+
+    .prophet-commentary summary::-webkit-details-marker { display: none; }
+    .prophet-commentary summary:hover { background: var(--primary-soft); }
+
+    .commentary-chevron {
+      color: var(--muted);
+      transition: transform .2s ease;
+    }
+
+    .prophet-commentary[open] .commentary-chevron { transform: rotate(180deg); }
+
+    .prophet-commentary-content {
+      border-top: 1px solid var(--border);
+      padding: 22px;
+    }
+
+    .prophet-commentary-content p {
+      margin-bottom: 0;
+      white-space: pre-line;
+    }
 
     .source-link {
       display: inline-block;
