@@ -1,0 +1,1545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Jundullah — a calm digital Islamic learning and Qur'an reading website." />
+  <title>Jundullah | Islamic Learning</title>
+
+  <style>
+    :root {
+      --bg: #f6f1e6;
+      --surface: #fffdf8;
+      --surface-2: #eee7d7;
+      --text: #17231e;
+      --muted: #68736e;
+      --primary: #0c5137;
+      --primary-hover: #083d29;
+      --primary-soft: #dcebe2;
+      --gold: #b58b3b;
+      --border: #ded5c4;
+      --danger: #a43a3a;
+      --shadow: 0 16px 40px rgba(28, 45, 37, 0.10);
+      --radius: 20px;
+      --arabic-size: 35px;
+    }
+
+    body.dark {
+      --bg: #101713;
+      --surface: #17201b;
+      --surface-2: #202b25;
+      --text: #f1f5f2;
+      --muted: #aab8b0;
+      --primary: #7bcaa0;
+      --primary-hover: #98d9b7;
+      --primary-soft: #203d2e;
+      --gold: #d6b56f;
+      --border: #314139;
+      --danger: #ff9f9f;
+      --shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.65;
+    }
+
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    a { color: inherit; text-decoration: none; }
+
+    .container {
+      width: min(1180px, calc(100% - 32px));
+      margin-inline: auto;
+    }
+
+    .hidden { display: none !important; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--border);
+      background: color-mix(in srgb, var(--surface) 92%, transparent);
+      backdrop-filter: blur(15px);
+    }
+
+    .navbar {
+      min-height: 74px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border: 0;
+      background: transparent;
+      color: var(--text);
+      font-weight: 850;
+      font-size: 1.16rem;
+    }
+
+    .brand-mark {
+      width: 43px;
+      height: 43px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      color: white;
+      background: var(--primary);
+      box-shadow: var(--shadow);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-link, .icon-button {
+      border: 0;
+      border-radius: 12px;
+      padding: 10px 13px;
+      color: var(--text);
+      background: transparent;
+    }
+
+    .nav-link:hover, .nav-link.active, .icon-button:hover {
+      color: var(--primary);
+      background: var(--primary-soft);
+    }
+
+    .nav-actions { display: flex; gap: 8px; }
+    .menu-button { display: none; }
+
+    main { min-height: calc(100vh - 150px); }
+    .page { padding: 54px 0 80px; }
+
+    .hero {
+      padding: 80px 0;
+      border-bottom: 1px solid var(--border);
+      background:
+        radial-gradient(circle at 15% 15%, color-mix(in srgb, var(--gold) 22%, transparent), transparent 32%),
+        radial-gradient(circle at 87% 25%, color-mix(in srgb, var(--primary) 18%, transparent), transparent 35%),
+        var(--surface);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 46px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      color: var(--gold);
+      font-weight: 850;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      font-size: .81rem;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      max-width: 760px;
+      margin-bottom: 20px;
+      font-size: clamp(2.6rem, 7vw, 5.1rem);
+      line-height: 1.02;
+      letter-spacing: -.055em;
+    }
+
+    h2 {
+      font-size: clamp(1.9rem, 4vw, 3rem);
+      line-height: 1.12;
+      letter-spacing: -.035em;
+    }
+
+    .lead {
+      max-width: 720px;
+      color: var(--muted);
+      font-size: 1.08rem;
+    }
+
+    .hero-actions, .toolbar, .reader-controls, .segmented {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .hero-actions { margin-top: 30px; }
+
+    .button {
+      min-height: 46px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 1px solid transparent;
+      border-radius: 14px;
+      padding: 11px 17px;
+      font-weight: 760;
+    }
+
+    .button.primary { color: white; background: var(--primary); }
+    body.dark .button.primary { color: #102018; }
+    .button.primary:hover { background: var(--primary-hover); }
+
+    .button.secondary {
+      color: var(--text);
+      border-color: var(--border);
+      background: var(--surface);
+    }
+
+    .button.secondary.active {
+      color: var(--primary);
+      border-color: var(--primary);
+      background: var(--primary-soft);
+    }
+
+    .button.danger {
+      color: var(--danger);
+      border-color: color-mix(in srgb, var(--danger) 35%, var(--border));
+      background: transparent;
+    }
+
+    .hero-card, .card, .verse, .mushaf-sheet {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: 0 8px 24px rgba(35, 50, 43, .05);
+    }
+
+    .hero-card { padding: 30px; box-shadow: var(--shadow); }
+
+    .hero-arabic {
+      margin: 18px 0;
+      color: var(--primary);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 2.2rem;
+      text-align: right;
+      line-height: 1.8;
+      direction: rtl;
+    }
+
+    .section { padding: 76px 0; }
+
+    .section-header, .reader-header {
+      margin-bottom: 28px;
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .section-header p { max-width: 630px; margin-bottom: 0; color: var(--muted); }
+
+    .grid { display: grid; gap: 20px; }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    .card { padding: 23px; }
+    .feature-card { transition: transform .18s ease, box-shadow .18s ease; }
+    .feature-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+
+    .feature-icon {
+      width: 46px;
+      height: 46px;
+      margin-bottom: 18px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      color: var(--primary);
+      background: var(--primary-soft);
+      font-size: 1.22rem;
+    }
+
+    .muted, .feature-card p { color: var(--muted); }
+    .page-heading { margin-bottom: 28px; }
+
+    .toolbar {
+      margin-bottom: 24px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .search-box {
+      min-width: min(100%, 420px);
+      flex: 1;
+      position: relative;
+    }
+
+    .search-box input, select, .number-input {
+      width: 100%;
+      min-height: 49px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 11px 14px;
+      color: var(--text);
+      background: var(--surface);
+      outline: none;
+    }
+
+    .search-box input { padding-left: 43px; }
+    .search-symbol {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+    }
+
+    input:focus, select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px var(--primary-soft);
+    }
+
+    .surah-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 17px;
+    }
+
+    .surah-card {
+      width: 100%;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 16px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+      text-align: left;
+      color: var(--text);
+      background: var(--surface);
+    }
+
+    .surah-card:hover { border-color: var(--primary); box-shadow: var(--shadow); }
+
+    .surah-number, .verse-number {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 13px;
+      color: var(--primary);
+      background: var(--primary-soft);
+      font-weight: 850;
+    }
+
+    .surah-card h3 { margin-bottom: 2px; font-size: 1rem; }
+    .surah-card p { margin-bottom: 0; color: var(--muted); font-size: .88rem; }
+
+    .surah-arabic {
+      color: var(--primary);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.45rem;
+      direction: rtl;
+    }
+
+    .verse-list { display: grid; gap: 16px; }
+    .verse { padding: 25px; }
+
+    .verse-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .verse-number { border-radius: 50%; }
+
+    .bookmark-button {
+      border: 0;
+      border-radius: 12px;
+      padding: 9px 11px;
+      color: var(--muted);
+      background: var(--surface-2);
+    }
+
+    .bookmark-button.saved {
+      color: var(--gold);
+      background: color-mix(in srgb, var(--gold) 18%, var(--surface));
+    }
+
+    .verse-arabic {
+      margin: 22px 0;
+      font-size: var(--arabic-size);
+      line-height: 2;
+      text-align: right;
+      direction: rtl;
+      font-family: Georgia, "Times New Roman", serif;
+    }
+
+    .translation-label {
+      margin-bottom: 4px;
+      color: var(--gold);
+      font-size: .78rem;
+      font-weight: 850;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .verse-translation { color: var(--muted); }
+
+    .meaning-note {
+      margin-top: 14px;
+      border-left: 3px solid var(--gold);
+      padding: 10px 14px;
+      color: var(--muted);
+      background: color-mix(in srgb, var(--gold) 8%, var(--surface));
+    }
+
+    .status, .notice {
+      border: 1px dashed var(--border);
+      border-radius: 18px;
+      padding: 26px;
+      color: var(--muted);
+      background: var(--surface);
+    }
+
+    .status { text-align: center; }
+    .error { color: var(--danger); }
+
+    .page-selector {
+      display: grid;
+      grid-template-columns: auto minmax(100px, 140px) auto auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .mushaf-sheet {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: clamp(24px, 5vw, 56px);
+      box-shadow: var(--shadow);
+    }
+
+    .mushaf-page-number {
+      margin-bottom: 18px;
+      color: var(--gold);
+      text-align: center;
+      font-weight: 800;
+    }
+
+    .mushaf-arabic {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: var(--arabic-size);
+      line-height: 2.25;
+      text-align: justify;
+      direction: rtl;
+    }
+
+    .mushaf-ayah {
+      display: inline;
+    }
+
+    .ayah-marker {
+      display: inline-grid;
+      place-items: center;
+      min-width: 1.7em;
+      height: 1.7em;
+      margin-inline: .15em;
+      border: 1px solid var(--gold);
+      border-radius: 50%;
+      color: var(--gold);
+      font-size: .45em;
+      vertical-align: middle;
+    }
+
+    .page-translation {
+      margin-top: 34px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+
+    details.pillar {
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: var(--surface);
+    }
+
+    details.pillar + details.pillar { margin-top: 14px; }
+
+    details.pillar summary {
+      list-style: none;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 16px;
+      padding: 20px;
+      cursor: pointer;
+      font-weight: 820;
+    }
+
+    details.pillar summary::-webkit-details-marker { display: none; }
+
+    .pillar-index {
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      color: white;
+      background: var(--primary);
+      font-weight: 900;
+    }
+
+    body.dark .pillar-index { color: #102018; }
+
+    .pillar-chevron {
+      color: var(--muted);
+      transition: transform .2s ease;
+    }
+
+    details[open] .pillar-chevron { transform: rotate(180deg); }
+
+    .pillar-content {
+      padding: 0 22px 22px 84px;
+      color: var(--muted);
+    }
+
+    .pillar-content h4 { margin-bottom: 5px; color: var(--text); }
+    .pillar-content ul { padding-left: 20px; }
+
+    .name-card { text-align: center; }
+    .name-arabic {
+      margin-bottom: 10px;
+      color: var(--primary);
+      font-size: 1.9rem;
+      font-family: Georgia, "Times New Roman", serif;
+      direction: rtl;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 34px 0;
+      color: var(--muted);
+      background: var(--surface);
+    }
+
+    .footer-grid {
+      display: flex;
+      justify-content: space-between;
+      gap: 30px;
+    }
+
+    .footer-grid p { max-width: 730px; margin-bottom: 0; }
+
+    @media (max-width: 920px) {
+      .hero-grid, .grid-3, .grid-4, .surah-grid { grid-template-columns: 1fr 1fr; }
+
+      .nav-links {
+        position: absolute;
+        top: 74px;
+        left: 16px;
+        right: 16px;
+        display: none;
+        flex-direction: column;
+        align-items: stretch;
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 12px;
+        background: var(--surface);
+        box-shadow: var(--shadow);
+      }
+
+      .nav-links.open { display: flex; }
+      .menu-button { display: inline-flex; }
+    }
+
+    @media (max-width: 640px) {
+      .container { width: min(100% - 22px, 1180px); }
+      .hero { padding: 55px 0; }
+      .hero-grid, .grid-3, .grid-4, .surah-grid { grid-template-columns: 1fr; }
+      h1 { font-size: 2.65rem; }
+      .section { padding: 55px 0; }
+
+      .section-header, .reader-header, .footer-grid {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .surah-card { grid-template-columns: auto 1fr; }
+      .surah-arabic { grid-column: 2; }
+      .desktop-label { display: none; }
+
+      .page-selector { grid-template-columns: 1fr 1fr; }
+      .page-selector .number-input { grid-column: 1 / -1; }
+      .pillar-content { padding: 0 18px 20px; }
+    }
+
+    .name-detail-card {
+      padding: 0;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .name-detail-card summary {
+      list-style: none;
+      padding: 24px;
+      cursor: pointer;
+    }
+
+    .name-detail-card summary::-webkit-details-marker { display: none; }
+
+    .name-detail-card[open] {
+      grid-column: span 2;
+      box-shadow: var(--shadow);
+    }
+
+    .name-open-label {
+      display: inline-block;
+      margin-top: 8px;
+      color: var(--primary);
+      font-size: .82rem;
+      font-weight: 800;
+    }
+
+    .name-detail-content {
+      border-top: 1px solid var(--border);
+      padding: 22px;
+      text-align: left;
+      color: var(--muted);
+      background: color-mix(in srgb, var(--primary-soft) 45%, var(--surface));
+    }
+
+    .name-detail-content h4 {
+      margin-bottom: 5px;
+      color: var(--text);
+    }
+
+    .mushaf-sheet {
+      position: relative;
+      max-width: 790px;
+      min-height: 1040px;
+      border: 10px double color-mix(in srgb, var(--gold) 70%, var(--border));
+      border-radius: 3px;
+      padding: 46px 54px 70px;
+      background:
+        linear-gradient(rgba(255,255,255,.72), rgba(255,255,255,.72)),
+        repeating-linear-gradient(0deg, #f2e4bd 0 1px, transparent 1px 5px),
+        #fbf3dc;
+      color: #17130d;
+    }
+
+    body.dark .mushaf-sheet {
+      background:
+        linear-gradient(rgba(247,239,213,.94), rgba(247,239,213,.94)),
+        #f7efd5;
+      color: #17130d;
+    }
+
+    .mushaf-page-number {
+      color: #7b5b1f;
+      font-family: Georgia, serif;
+    }
+
+    .mushaf-arabic {
+      font-family: "Amiri Quran", "Traditional Arabic", "Scheherazade New", Georgia, serif;
+      font-size: calc(var(--arabic-size) * .92);
+      line-height: 2.15;
+      text-align: justify;
+      text-align-last: center;
+    }
+
+    .mushaf-surah-heading {
+      width: 100%;
+      margin: 20px 0 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      border: 2px solid #8b6b2d;
+      padding: 7px 14px;
+      background: rgba(181,139,59,.10);
+      color: #533d17;
+      font-size: .9rem;
+      direction: ltr;
+    }
+
+    .mushaf-surah-heading strong {
+      font-size: 1.35rem;
+      direction: rtl;
+    }
+
+    .mushaf-bismillah {
+      margin: 8px 0 12px;
+      text-align: center;
+      font-size: 1.08em;
+      direction: rtl;
+    }
+
+    .mushaf-ayah {
+      position: relative;
+      display: inline;
+      border-radius: 4px;
+      cursor: help;
+      transition: background .15s ease;
+    }
+
+    .mushaf-ayah:hover,
+    .mushaf-ayah:focus {
+      background: rgba(181,139,59,.18);
+      outline: none;
+    }
+
+    .mushaf-ayah::after {
+      content: attr(data-translation);
+      position: absolute;
+      z-index: 30;
+      right: 0;
+      bottom: calc(100% + 12px);
+      width: min(360px, 78vw);
+      padding: 12px 14px;
+      border: 1px solid #c9b27c;
+      border-radius: 10px;
+      color: #1f1b13;
+      background: #fffdf5;
+      box-shadow: 0 12px 30px rgba(0,0,0,.18);
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      text-align: left;
+      direction: ltr;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(5px);
+      transition: opacity .15s ease, transform .15s ease, visibility .15s ease;
+    }
+
+    .mushaf-ayah:hover::after,
+    .mushaf-ayah:focus::after {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .mushaf-hover-help {
+      position: absolute;
+      left: 50%;
+      bottom: 20px;
+      transform: translateX(-50%);
+      width: max-content;
+      max-width: calc(100% - 30px);
+      color: #786a4b;
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+      font-size: .78rem;
+      text-align: center;
+    }
+
+    @media (max-width: 640px) {
+      .name-detail-card[open] { grid-column: span 1; }
+      .mushaf-sheet {
+        min-height: 760px;
+        padding: 28px 20px 62px;
+        border-width: 6px;
+      }
+      .mushaf-arabic {
+        font-size: calc(var(--arabic-size) * .78);
+        line-height: 2;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="container navbar">
+      <button class="brand" onclick="showPage('home')" aria-label="Go to home">
+        <span class="brand-mark">ج</span>
+        <span>Jundullah</span>
+      </button>
+
+      <nav class="nav-links" id="navLinks" aria-label="Main navigation">
+        <button class="nav-link active" data-page="home">Home</button>
+        <button class="nav-link" data-page="quran">Qur'an</button>
+        <button class="nav-link" data-page="asmaul">Names of Allah</button>
+        <button class="nav-link" data-page="islam">Pillars of Islam</button>
+        <button class="nav-link" data-page="iman">Pillars of Faith</button>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="icon-button menu-button" id="menuButton" aria-label="Open menu">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="homePage">
+      <div class="hero">
+        <div class="container hero-grid">
+          <div>
+            <div class="eyebrow">Digital Islamic Learning</div>
+            <h1>Learn Islam with clarity and calm.</h1>
+            <p class="lead">
+              Jundullah provides a focused place to read the Qur'an and learn the foundations of Islam in clear English.
+            </p>
+            <div class="hero-actions">
+              <button class="button primary" onclick="showPage('quran')">Read the Qur'an</button>
+              <button class="button secondary" onclick="showPage('islam')">Explore the Pillars</button>
+            </div>
+          </div>
+
+          <article class="hero-card">
+            <div class="eyebrow">A daily reminder</div>
+            <div class="hero-arabic">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
+            <p>“In the name of Allah, the Entirely Merciful, the Especially Merciful.”</p>
+            <small class="muted">Surah Al-Fatihah, 1:1 — Sahih International</small>
+          </article>
+        </div>
+      </div>
+
+      <section class="section">
+        <div class="container">
+          <div class="section-header">
+            <div>
+              <div class="eyebrow">Explore</div>
+              <h2>Choose where you would like to begin</h2>
+            </div>
+            <p>The website is designed for comfortable use on desktop, tablet, and mobile devices.</p>
+          </div>
+
+          <div class="grid grid-3">
+            <button class="card feature-card" onclick="showPage('quran')">
+              <div class="feature-icon">☪</div>
+              <h3>The Qur'an</h3>
+              <p>Read by surah or in a page-style Mushaf view, with English meaning.</p>
+            </button>
+
+            <button class="card feature-card" onclick="showPage('asmaul')">
+              <div class="feature-icon">✦</div>
+              <h3>Names of Allah</h3>
+              <p>Learn selected names of Allah with transliteration and English meaning.</p>
+            </button>
+
+            <button class="card feature-card" onclick="showPage('islam')">
+              <div class="feature-icon">5</div>
+              <h3>Pillars of Islam</h3>
+              <p>Open each pillar to study its purpose, practice, and significance.</p>
+            </button>
+
+            <button class="card feature-card" onclick="showPage('iman')">
+              <div class="feature-icon">6</div>
+              <h3>Pillars of Faith</h3>
+              <p>Explore the six foundational beliefs in greater detail.</p>
+            </button>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <section class="page hidden" id="quranPage">
+      <div class="container">
+        <div class="page-heading">
+          <div class="eyebrow">The Noble Qur'an</div>
+          <h2>Choose your reading format</h2>
+          <p class="lead">
+            Read by surah using individual verse cards, or switch to Mushaf Page View for a continuous page-style presentation.
+          </p>
+        </div>
+
+        <div class="toolbar">
+          <div class="segmented">
+            <button class="button secondary active" id="surahModeButton">Surah View</button>
+            <button class="button secondary" id="pageModeButton">Mushaf Page View</button>
+          </div>
+        </div>
+
+        <div id="surahMode">
+          <div id="surahListView">
+            <div class="toolbar">
+              <label class="search-box">
+                <span class="search-symbol">⌕</span>
+                <input id="surahSearch" type="search" placeholder="Search by surah name, meaning, or number..." />
+              </label>
+            </div>
+            <div id="surahStatus" class="status">Loading surahs...</div>
+            <div id="surahGrid" class="surah-grid hidden"></div>
+          </div>
+
+          <div id="surahReaderView" class="hidden">
+            <div class="reader-header">
+              <div>
+                <button class="button secondary" id="backToSurahs">← All surahs</button>
+                <div style="margin-top:22px">
+                  <div class="eyebrow" id="readerClassification">The Qur'an</div>
+                  <h2 id="readerTitle">Surah</h2>
+                  <p class="muted" id="readerDescription"></p>
+                </div>
+              </div>
+
+              <div class="reader-controls">
+                <button class="button secondary" id="toggleTranslation">Hide translation</button>
+                <button class="button secondary" id="decreaseArabic">A−</button>
+                <button class="button secondary" id="increaseArabic">A+</button>
+              </div>
+            </div>
+
+            <div class="notice" style="margin-bottom:20px">
+              The English text is a translation of meaning. A translation helps readers understand the message, but it is not identical to the Arabic Qur'an itself.
+            </div>
+
+            <div id="verseStatus" class="status">Loading verses...</div>
+            <div id="verseList" class="verse-list hidden"></div>
+          </div>
+        </div>
+
+        <div id="pageMode" class="hidden">
+          <div class="reader-header">
+            <div>
+              <div class="eyebrow">Mushaf-style reading</div>
+              <h2>Qur'an Page <span id="currentPageHeading">1</span></h2>
+              <p class="muted">Read a page-style layout based on the traditional 604-page sequence. Hover over an ayah to see its English meaning.</p>
+            </div>
+
+            <div class="page-selector">
+              <button class="button secondary" id="previousPage">← Previous</button>
+              <input class="number-input" id="pageNumberInput" type="number" min="1" max="604" value="1" aria-label="Quran page number" />
+              <button class="button secondary" id="goToPage">Go</button>
+              <button class="button secondary" id="nextPage">Next →</button>
+            </div>
+          </div>
+
+          <div id="pageStatus" class="status">Choose a page to begin.</div>
+
+          <article id="mushafSheet" class="mushaf-sheet hidden">
+            <div class="mushaf-page-number">Page <span id="mushafPageNumber">1</span></div>
+            <div id="mushafArabic" class="mushaf-arabic"></div>
+            <div class="mushaf-hover-help">Hover over an ayah to see its English meaning.</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="page hidden" id="asmaulPage">
+      <div class="container">
+        <div class="page-heading">
+          <div class="eyebrow">Knowing Allah</div>
+          <h2>Selected Names of Allah</h2>
+          <p class="lead">
+            Search the names below, then click a card to open a fuller explanation of its meaning,
+            spiritual significance, and a practical reflection for daily life.
+          </p>
+        </div>
+
+        <div class="toolbar">
+          <label class="search-box">
+            <span class="search-symbol">⌕</span>
+            <input id="asmaulSearch" type="search" placeholder="Search a name or meaning..." />
+          </label>
+        </div>
+
+        <div id="asmaulGrid" class="grid grid-4"></div>
+
+        <div class="notice" style="margin-top:25px">
+          This starter version contains a selected set rather than the complete 99-name collection. Add the remaining entries only after checking a reliable scholarly source.
+        </div>
+      </div>
+    </section>
+
+    <section class="page hidden" id="islamPage">
+      <div class="container">
+        <div class="page-heading">
+          <div class="eyebrow">Foundations of practice</div>
+          <h2>The Five Pillars of Islam</h2>
+          <p class="lead">Click any pillar to open a deeper explanation.</p>
+        </div>
+
+        <div id="islamPillars"></div>
+      </div>
+    </section>
+
+    <section class="page hidden" id="imanPage">
+      <div class="container">
+        <div class="page-heading">
+          <div class="eyebrow">Foundations of belief</div>
+          <h2>The Six Pillars of Faith</h2>
+          <p class="lead">Click any belief to study what it means and why it matters.</p>
+        </div>
+
+        <div id="faithPillars"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-grid">
+      <div>
+        <strong>Jundullah</strong>
+        <p>
+          A learning and reference website. It does not replace qualified scholars, teachers, or formal religious guidance.
+        </p>
+      </div>
+      <div>
+        <small>Qur'an text and page data: Al Quran Cloud API · English meaning: Sahih International edition</small>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const API_BASE = "https://api.alquran.cloud/v1";
+
+    const state = {
+      surahs: [],
+      currentSurah: null,
+      currentPage: 1,
+      showTranslation: true,
+      arabicSize: Number(localStorage.getItem("jundullahArabicSize") || 35)
+    };
+
+    const namesOfAllah = [
+      ["الرَّحْمَنُ", "Ar-Rahman", "The Entirely Merciful"],
+      ["الرَّحِيمُ", "Ar-Rahim", "The Especially Merciful"],
+      ["الْمَلِكُ", "Al-Malik", "The King and Sovereign"],
+      ["الْقُدُّوسُ", "Al-Quddus", "The Absolutely Pure"],
+      ["السَّلَامُ", "As-Salam", "The Source of Peace"],
+      ["الْمُؤْمِنُ", "Al-Mu'min", "The Giver of Security"],
+      ["الْمُهَيْمِنُ", "Al-Muhaymin", "The Guardian"],
+      ["الْعَزِيزُ", "Al-Aziz", "The Almighty"],
+      ["الْجَبَّارُ", "Al-Jabbar", "The Compeller and Restorer"],
+      ["الْمُتَكَبِّرُ", "Al-Mutakabbir", "The Supremely Great"],
+      ["الْخَالِقُ", "Al-Khaliq", "The Creator"],
+      ["الْبَارِئُ", "Al-Bari", "The Originator"]
+    ];
+
+    const nameDetails = {
+      "Ar-Rahman": {
+        explanation: "Allah's mercy is vast and extends throughout creation. This name points to mercy that encompasses believers and non-believers in worldly life.",
+        reflection: "Recognise every blessing as an expression of divine mercy, and show mercy to people, animals, and the environment."
+      },
+      "Ar-Rahim": {
+        explanation: "This name emphasises Allah's continuous and special mercy, particularly toward those who believe, repent, and seek Him.",
+        reflection: "Never despair of Allah's mercy. Return through sincere repentance and become more forgiving toward others."
+      },
+      "Al-Malik": {
+        explanation: "Allah is the absolute King and Owner of all creation. Every form of human authority is limited, temporary, and accountable to Him.",
+        reflection: "Hold possessions and positions with humility, remembering that ownership is a trust rather than an independent right."
+      },
+      "Al-Quddus": {
+        explanation: "Allah is completely free from every imperfection, weakness, injustice, and limitation.",
+        reflection: "Purify intentions, speech, and conduct while remembering that human perfection is never equal to divine perfection."
+      },
+      "As-Salam": {
+        explanation: "Allah is perfect and free from defect, and He is the source of true peace, safety, and wholeness.",
+        reflection: "Seek peace through obedience to Allah and become a person from whose words and actions others are safe."
+      },
+      "Al-Mu'min": {
+        explanation: "Allah grants security, confirms truth, and gives reassurance to His servants.",
+        reflection: "Place ultimate trust in Allah while taking responsible steps to protect yourself and others."
+      },
+      "Al-Muhaymin": {
+        explanation: "Allah watches over, preserves, witnesses, and governs all things with complete knowledge.",
+        reflection: "Act with integrity even when no person is watching, because nothing is hidden from Allah."
+      },
+      "Al-Aziz": {
+        explanation: "Allah possesses complete might, honour, and invincibility. Nothing can overcome His will.",
+        reflection: "Seek dignity through obedience rather than arrogance, status, or domination of others."
+      },
+      "Al-Jabbar": {
+        explanation: "Allah is irresistible in power and is also the One who restores what is broken and supports the weak.",
+        reflection: "Turn to Allah in moments of brokenness, and avoid using strength to oppress others."
+      },
+      "Al-Mutakabbir": {
+        explanation: "True greatness and majesty belong to Allah alone. Human pride is misplaced because every ability and blessing is created by Him.",
+        reflection: "Replace arrogance with gratitude, humility, and honest awareness of personal limitations."
+      },
+      "Al-Khaliq": {
+        explanation: "Allah brings creation into existence with knowledge, wisdom, proportion, and purpose.",
+        reflection: "Observe creation thoughtfully and treat life as meaningful rather than accidental or disposable."
+      },
+      "Al-Bari": {
+        explanation: "Allah originates creation and brings it forth in distinct, ordered, and fitting forms.",
+        reflection: "Appreciate diversity in creation and resist judging worth solely by appearance or social preference."
+      }
+    };
+
+    const islamPillars = [
+      {
+        title: "Shahadah — Testimony of Faith",
+        summary: "To testify that none has the right to be worshipped except Allah and that Muhammad is His Messenger.",
+        meaning: "The Shahadah expresses the central truth of Islam: worship belongs to Allah alone, and Muslims follow the guidance delivered through Prophet Muhammad.",
+        practice: [
+          "It is spoken with sincere belief, not merely as a formula.",
+          "It shapes worship, ethics, priorities, and a Muslim's relationship with Allah.",
+          "Belief in the Messenger includes respecting and following his authentic teachings."
+        ],
+        significance: "It is the entry point into Islam and the foundation upon which every other act of worship rests."
+      },
+      {
+        title: "Salah — The Five Daily Prayers",
+        summary: "To perform the prescribed prayers at their appointed times.",
+        meaning: "Salah creates a repeated daily connection with Allah through recitation, remembrance, humility, and physical worship.",
+        practice: [
+          "The five prayers are Fajr, Dhuhr, Asr, Maghrib, and Isha.",
+          "Prayer requires purification, intention, facing the qiblah, and following its prescribed actions.",
+          "Congregational prayer has special importance, particularly for those able to attend."
+        ],
+        significance: "Prayer disciplines time, strengthens remembrance of Allah, and continually returns the believer to worship and accountability."
+      },
+      {
+        title: "Zakah — Obligatory Charity",
+        summary: "To give a prescribed share of qualifying wealth to eligible recipients.",
+        meaning: "Zakah is an act of worship involving wealth. It purifies possessions, supports vulnerable people, and reminds believers that wealth is a trust.",
+        practice: [
+          "It applies only when specific conditions, thresholds, and time periods are met.",
+          "Different types of wealth may have different calculations.",
+          "Recipients are defined within Islamic law."
+        ],
+        significance: "Zakah combines devotion to Allah with social responsibility and economic care."
+      },
+      {
+        title: "Sawm — Fasting in Ramadan",
+        summary: "To fast during the month of Ramadan from dawn until sunset.",
+        meaning: "Fasting means abstaining from food, drink, and other invalidating acts while cultivating sincerity, patience, restraint, and consciousness of Allah.",
+        practice: [
+          "The fast begins at true dawn and ends at sunset.",
+          "Intention and avoidance of invalidating acts are essential.",
+          "Islam provides concessions for people facing illness, travel, pregnancy, and other valid circumstances."
+        ],
+        significance: "Fasting trains self-control, gratitude, empathy, and spiritual attentiveness."
+      },
+      {
+        title: "Hajj — Pilgrimage to Makkah",
+        summary: "To perform the pilgrimage once in a lifetime when physically and financially able.",
+        meaning: "Hajj is a prescribed journey of worship involving specific rites performed in and around Makkah during the designated days.",
+        practice: [
+          "It includes entering ihram, standing at Arafah, tawaf, sa'i, and other required rites.",
+          "It is obligatory only for those who meet the conditions of ability.",
+          "Its rites require careful learning and proper guidance."
+        ],
+        significance: "Hajj unites Muslims across nations and backgrounds in shared worship, humility, repentance, and remembrance."
+      }
+    ];
+
+    const faithPillars = [
+      {
+        title: "Belief in Allah",
+        summary: "To believe in Allah's existence, oneness, lordship, perfect names and attributes, and exclusive right to worship.",
+        meaning: "This belief rejects associating partners with Allah and places worship, reliance, hope, fear, and ultimate devotion in Him alone.",
+        implications: [
+          "Worship is directed to Allah alone.",
+          "Allah is understood through revelation rather than imagination.",
+          "His names and attributes are affirmed in a manner befitting Him."
+        ]
+      },
+      {
+        title: "Belief in the Angels",
+        summary: "To believe that angels are real creations of Allah who faithfully carry out His commands.",
+        meaning: "Angels belong to the unseen world. Revelation identifies particular angels and duties, while Muslims avoid unsupported speculation.",
+        implications: [
+          "Jibril is associated with delivering revelation.",
+          "Angels record deeds and perform other duties by Allah's command.",
+          "They do not disobey Allah."
+        ]
+      },
+      {
+        title: "Belief in the Revealed Books",
+        summary: "To believe that Allah sent revelation to guide humanity.",
+        meaning: "Muslims believe in the original scriptures revealed by Allah, including the Torah, Psalms, Gospel, and the Qur'an.",
+        implications: [
+          "The Qur'an is regarded as the final revelation.",
+          "Revelation is a source of guidance, worship, law, and moral direction.",
+          "Muslims honour all genuine revelation sent by Allah."
+        ]
+      },
+      {
+        title: "Belief in the Messengers",
+        summary: "To believe that Allah chose messengers to communicate His guidance.",
+        meaning: "The messengers called people to worship Allah and conveyed revelation truthfully. Muhammad is believed to be the final messenger.",
+        implications: [
+          "All messengers deserve respect.",
+          "Their central call was the worship of Allah alone.",
+          "Authentic teachings of Prophet Muhammad guide Muslim practice."
+        ]
+      },
+      {
+        title: "Belief in the Last Day",
+        summary: "To believe in resurrection, judgment, accountability, Paradise, and Hell.",
+        meaning: "Human life has purpose and moral consequence. Every person will return to Allah and be judged with complete justice.",
+        implications: [
+          "Actions, intentions, and rights owed to others matter.",
+          "This belief encourages repentance and responsibility.",
+          "Worldly life is understood as temporary rather than ultimate."
+        ]
+      },
+      {
+        title: "Belief in Divine Decree",
+        summary: "To believe that Allah knows, wills, and creates all things while human beings remain responsible for their choices.",
+        meaning: "Divine decree does not remove human accountability. Muslims combine trust in Allah with effort, lawful decision-making, patience, and repentance.",
+        implications: [
+          "Allah's knowledge encompasses all things.",
+          "Believers still plan, work, choose, and answer for their conduct.",
+          "Trust in decree provides steadiness without encouraging passivity."
+        ]
+      }
+    ];
+
+    const pages = {
+      home: document.getElementById("homePage"),
+      quran: document.getElementById("quranPage"),
+      asmaul: document.getElementById("asmaulPage"),
+      islam: document.getElementById("islamPage"),
+      iman: document.getElementById("imanPage")
+    };
+
+    function showPage(name) {
+      Object.values(pages).forEach(page => page.classList.add("hidden"));
+      (pages[name] || pages.home).classList.remove("hidden");
+
+      document.querySelectorAll(".nav-link").forEach(link => {
+        link.classList.toggle("active", link.dataset.page === name);
+      });
+
+      document.getElementById("navLinks").classList.remove("open");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      if (name === "quran" && state.surahs.length === 0) loadSurahs();
+
+      const titles = {
+        home: "Jundullah | Islamic Learning",
+        quran: "The Qur'an | Jundullah",
+        asmaul: "Names of Allah | Jundullah",
+        islam: "Pillars of Islam | Jundullah",
+        iman: "Pillars of Faith | Jundullah"
+      };
+      document.title = titles[name] || titles.home;
+    }
+
+    document.querySelectorAll(".nav-link").forEach(link => {
+      link.addEventListener("click", () => showPage(link.dataset.page));
+    });
+
+    document.getElementById("menuButton").addEventListener("click", () => {
+      document.getElementById("navLinks").classList.toggle("open");
+    });
+
+    function escapeHTML(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    async function fetchJSON(url) {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error(`Request failed with status ${response.status}`);
+      const result = await response.json();
+      if (result.code !== 200 || !result.data) throw new Error("The API returned an unexpected response.");
+      return result.data;
+    }
+
+    async function loadSurahs() {
+      const status = document.getElementById("surahStatus");
+      const grid = document.getElementById("surahGrid");
+
+      status.classList.remove("hidden", "error");
+      status.textContent = "Loading surahs...";
+      grid.classList.add("hidden");
+
+      try {
+        state.surahs = await fetchJSON(`${API_BASE}/surah`);
+        renderSurahs(state.surahs);
+        status.classList.add("hidden");
+        grid.classList.remove("hidden");
+      } catch (error) {
+        console.error(error);
+        status.classList.add("error");
+        status.innerHTML = `<strong>Unable to load the surah list.</strong><br><button class="button secondary" onclick="loadSurahs()" style="margin-top:12px">Try again</button>`;
+      }
+    }
+
+    function renderSurahs(items) {
+      const grid = document.getElementById("surahGrid");
+
+      if (!items.length) {
+        grid.innerHTML = `<div class="status" style="grid-column:1/-1">No matching surah was found.</div>`;
+        return;
+      }
+
+      grid.innerHTML = items.map(surah => `
+        <button class="surah-card" onclick="openSurah(${surah.number})">
+          <span class="surah-number">${surah.number}</span>
+          <span>
+            <h3>${escapeHTML(surah.englishName)}</h3>
+            <p>${surah.numberOfAyahs} verses · ${escapeHTML(surah.revelationType)}</p>
+            <p>${escapeHTML(surah.englishNameTranslation)}</p>
+          </span>
+          <span class="surah-arabic">${surah.name}</span>
+        </button>
+      `).join("");
+    }
+
+    document.getElementById("surahSearch").addEventListener("input", event => {
+      const query = event.target.value.trim().toLowerCase();
+      renderSurahs(state.surahs.filter(surah =>
+        String(surah.number).includes(query) ||
+        surah.englishName.toLowerCase().includes(query) ||
+        surah.englishNameTranslation.toLowerCase().includes(query)
+      ));
+    });
+
+    async function openSurah(number) {
+      document.getElementById("surahListView").classList.add("hidden");
+      document.getElementById("surahReaderView").classList.remove("hidden");
+
+      const status = document.getElementById("verseStatus");
+      const list = document.getElementById("verseList");
+
+      status.classList.remove("hidden", "error");
+      status.textContent = "Loading verses...";
+      list.classList.add("hidden");
+
+      try {
+        const editions = await fetchJSON(`${API_BASE}/surah/${number}/editions/quran-uthmani,en.sahih`);
+        const arabic = editions[0];
+        const english = editions[1];
+
+        state.currentSurah = { arabic, english };
+
+        document.getElementById("readerTitle").textContent = `${arabic.englishName} — ${arabic.name}`;
+        document.getElementById("readerClassification").textContent = `${arabic.revelationType} · ${arabic.numberOfAyahs} verses`;
+        document.getElementById("readerDescription").textContent = `Name meaning: ${arabic.englishNameTranslation}`;
+
+        list.innerHTML = arabic.ayahs.map((ayah, index) =>
+          createVerseHTML(arabic, ayah, english.ayahs[index])
+        ).join("");
+
+        status.classList.add("hidden");
+        list.classList.remove("hidden");
+        applyArabicSize();
+      } catch (error) {
+        console.error(error);
+        status.classList.add("error");
+        status.innerHTML = `<strong>Unable to load this surah.</strong><br><button class="button secondary" onclick="openSurah(${number})" style="margin-top:12px">Try again</button>`;
+      }
+    }
+
+    function createVerseHTML(surah, arabicAyah, englishAyah) {
+      return `
+        <article class="verse">
+          <div class="verse-top">
+            <span class="verse-number">${arabicAyah.numberInSurah}</span>
+          </div>
+
+          <div class="verse-arabic">${arabicAyah.text}</div>
+
+          <div class="verse-translation ${state.showTranslation ? "" : "hidden"}">
+            <div class="translation-label">English meaning</div>
+            <strong>${escapeHTML(surah.englishName)} ${surah.number}:${arabicAyah.numberInSurah}</strong>
+            <p>${escapeHTML(englishAyah.text)}</p>
+            <div class="meaning-note">
+              This translation communicates the meaning in English. For deeper explanation, historical context, and legal interpretation, consult recognised tafsir and qualified teachers.
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function refreshCurrentSurah() {
+      if (!state.currentSurah) return;
+      const { arabic, english } = state.currentSurah;
+      document.getElementById("verseList").innerHTML = arabic.ayahs.map((ayah, index) =>
+        createVerseHTML(arabic, ayah, english.ayahs[index])
+      ).join("");
+      applyArabicSize();
+    }
+
+    async function loadQuranPage(pageNumber) {
+      pageNumber = Math.max(1, Math.min(604, Number(pageNumber) || 1));
+      state.currentPage = pageNumber;
+
+      document.getElementById("pageNumberInput").value = pageNumber;
+      document.getElementById("currentPageHeading").textContent = pageNumber;
+      document.getElementById("mushafPageNumber").textContent = pageNumber;
+
+      const status = document.getElementById("pageStatus");
+      const sheet = document.getElementById("mushafSheet");
+
+      status.classList.remove("hidden", "error");
+      status.textContent = `Loading Qur'an page ${pageNumber}...`;
+      sheet.classList.add("hidden");
+
+      try {
+        // The API's multi-edition page route is not consistently supported,
+        // so the Arabic text and English meaning are requested separately.
+        const [arabic, english] = await Promise.all([
+          fetchJSON(`${API_BASE}/page/${pageNumber}/quran-uthmani`),
+          fetchJSON(`${API_BASE}/page/${pageNumber}/en.sahih`)
+        ]);
+
+        const translations = new Map(
+          english.ayahs.map(ayah => [`${ayah.surah.number}:${ayah.numberInSurah}`, ayah.text])
+        );
+
+        let previousSurah = null;
+        document.getElementById("mushafArabic").innerHTML = arabic.ayahs.map(ayah => {
+          const key = `${ayah.surah.number}:${ayah.numberInSurah}`;
+          const translation = translations.get(key) || "English meaning unavailable.";
+          const surahHeading = previousSurah !== ayah.surah.number
+            ? `<div class="mushaf-surah-heading">
+                 <span>${escapeHTML(ayah.surah.englishName)}</span>
+                 <strong>${ayah.surah.name}</strong>
+               </div>
+               ${ayah.numberInSurah === 1 && ayah.surah.number !== 9
+                 ? `<div class="mushaf-bismillah">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>`
+                 : ""}`
+            : "";
+
+          previousSurah = ayah.surah.number;
+
+          return `${surahHeading}
+            <span class="mushaf-ayah" tabindex="0" data-translation="${escapeHTML(translation)}">
+              ${ayah.text}<span class="ayah-marker">${ayah.numberInSurah}</span>
+            </span>`;
+        }).join(" ");
+
+        status.classList.add("hidden");
+        sheet.classList.remove("hidden");
+        applyArabicSize();
+      } catch (error) {
+        console.error(error);
+        status.classList.add("error");
+        status.innerHTML = `
+          <strong>Unable to load page ${pageNumber}.</strong><br>
+          <span>The page API may be temporarily unavailable. Make sure you are opening the site through Live Server rather than directly as a local file.</span><br>
+          <button class="button secondary" onclick="loadQuranPage(${pageNumber})" style="margin-top:12px">Try again</button>
+        `;
+      }
+    }
+
+    function setQuranMode(mode) {
+      const surah = mode === "surah";
+      document.getElementById("surahMode").classList.toggle("hidden", !surah);
+      document.getElementById("pageMode").classList.toggle("hidden", surah);
+      document.getElementById("bookmarkView").classList.add("hidden");
+      document.getElementById("surahModeButton").classList.toggle("active", surah);
+      document.getElementById("pageModeButton").classList.toggle("active", !surah);
+
+      if (!surah && document.getElementById("mushafSheet").classList.contains("hidden")) {
+        loadQuranPage(state.currentPage);
+      }
+    }
+
+    document.getElementById("surahModeButton").addEventListener("click", () => setQuranMode("surah"));
+    document.getElementById("pageModeButton").addEventListener("click", () => setQuranMode("page"));
+
+    document.getElementById("backToSurahs").addEventListener("click", () => {
+      document.getElementById("surahReaderView").classList.add("hidden");
+      document.getElementById("surahListView").classList.remove("hidden");
+      scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    document.getElementById("toggleTranslation").addEventListener("click", event => {
+      state.showTranslation = !state.showTranslation;
+      event.currentTarget.textContent = state.showTranslation ? "Hide translation" : "Show translation";
+      refreshCurrentSurah();
+    });
+
+    document.getElementById("previousPage").addEventListener("click", () => loadQuranPage(state.currentPage - 1));
+    document.getElementById("nextPage").addEventListener("click", () => loadQuranPage(state.currentPage + 1));
+    document.getElementById("goToPage").addEventListener("click", () => loadQuranPage(document.getElementById("pageNumberInput").value));
+    document.getElementById("pageNumberInput").addEventListener("keydown", event => {
+      if (event.key === "Enter") loadQuranPage(event.currentTarget.value);
+    });
+
+    function applyArabicSize() {
+      document.documentElement.style.setProperty("--arabic-size", `${state.arabicSize}px`);
+      localStorage.setItem("jundullahArabicSize", String(state.arabicSize));
+    }
+
+    ["increaseArabic", "increasePageArabic"].forEach(id => {
+      document.getElementById(id).addEventListener("click", () => {
+        state.arabicSize = Math.min(56, state.arabicSize + 3);
+        applyArabicSize();
+      });
+    });
+
+    ["decreaseArabic", "decreasePageArabic"].forEach(id => {
+      document.getElementById(id).addEventListener("click", () => {
+        state.arabicSize = Math.max(22, state.arabicSize - 3);
+        applyArabicSize();
+      });
+    });
+
+    function renderNames(items) {
+      document.getElementById("asmaulGrid").innerHTML = items.map(item => {
+        const detail = nameDetails[item[1]] || {
+          explanation: "A fuller explanation is being prepared from verified scholarly sources.",
+          reflection: "Reflect on this name with humility and avoid drawing theological conclusions from translation alone."
+        };
+
+        return `
+          <details class="name-card name-detail-card">
+            <summary>
+              <div class="name-arabic">${item[0]}</div>
+              <h3>${escapeHTML(item[1])}</h3>
+              <p class="muted">${escapeHTML(item[2])}</p>
+              <span class="name-open-label">Click to learn more</span>
+            </summary>
+            <div class="name-detail-content">
+              <h4>Meaning and significance</h4>
+              <p>${escapeHTML(detail.explanation)}</p>
+              <h4>Personal reflection</h4>
+              <p>${escapeHTML(detail.reflection)}</p>
+              <div class="meaning-note">
+                English labels are approximate translations. The divine names should be understood through the Qur'an, authentic Sunnah, and reliable scholarship.
+              </div>
+            </div>
+          </details>
+        `;
+      }).join("");
+    }
+
+    document.getElementById("asmaulSearch").addEventListener("input", event => {
+      const q = event.target.value.trim().toLowerCase();
+      renderNames(namesOfAllah.filter(item => item[1].toLowerCase().includes(q) || item[2].toLowerCase().includes(q)));
+    });
+
+    function renderPillars(targetId, items, type) {
+      document.getElementById(targetId).innerHTML = items.map((item, index) => `
+        <details class="pillar">
+          <summary>
+            <span class="pillar-index">${index + 1}</span>
+            <span>
+              ${escapeHTML(item.title)}
+              <small class="muted" style="display:block;font-weight:500;margin-top:3px">${escapeHTML(item.summary)}</small>
+            </span>
+            <span class="pillar-chevron">⌄</span>
+          </summary>
+          <div class="pillar-content">
+            <h4>What it means</h4>
+            <p>${escapeHTML(item.meaning)}</p>
+
+            <h4>${type === "islam" ? "How it is practised" : "Key implications"}</h4>
+            <ul>${(item.practice || item.implications).map(point => `<li>${escapeHTML(point)}</li>`).join("")}</ul>
+
+            ${item.significance ? `<h4>Why it matters</h4><p>${escapeHTML(item.significance)}</p>` : ""}
+          </div>
+        </details>
+      `).join("");
+    }
+
+    applyArabicSize();
+    renderNames(namesOfAllah);
+    renderPillars("islamPillars", islamPillars, "islam");
+    renderPillars("faithPillars", faithPillars, "faith");
+    showPage("home");
+  </script>
+</body>
+</html>
