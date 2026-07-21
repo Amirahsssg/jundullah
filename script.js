@@ -1,11 +1,17 @@
 const API_BASE = "https://api.alquran.cloud/v1";
+const UMMAH_API_BASE = "https://ummahapi.com/api";
+const HADITH_CDN_BASE = "https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions";
 
     const state = {
       surahs: [],
       currentSurah: null,
       currentPage: 1,
       showTranslation: true,
-      arabicSize: Number(localStorage.getItem("jundullahArabicSize") || 35)
+      arabicSize: Number(localStorage.getItem("jundullahArabicSize") || 35),
+      hadithLoaded: false,
+      hadithPage: 1,
+      hadithQuery: "",
+      currentProphet: 0
     };
 
     const namesOfAllah = [
@@ -235,9 +241,42 @@ const API_BASE = "https://api.alquran.cloud/v1";
       }
     ];
 
+    // The long-form accounts are deliberately not stored here. Each entry only
+    // identifies reliable Qur'anic passages; translations and tafsir are loaded
+    // when the reader selects a prophet.
+    const prophets = [
+      { name: "Adam", arabic: "آدم", era: "Beginning of humanity · exact date unknown", refs: ["2:30", "7:23"], takeaways: ["Human honour comes with responsibility.", "Pride leads away from obedience.", "Sincere repentance is always meaningful."] },
+      { name: "Idris", arabic: "إدريس", era: "Ancient era · exact date unknown", refs: ["19:56", "21:85"], takeaways: ["Truthfulness raises a person's rank.", "Patience is part of prophetic character.", "A brief mention can still carry a lasting example."] },
+      { name: "Nuh", arabic: "نوح", era: "Before Ibrahim · exact date unknown", refs: ["11:36", "71:5"], takeaways: ["Continue calling to truth with patience.", "Results belong to Allah, while effort is our duty.", "Family connection does not replace faith and conduct."] },
+      { name: "Hud", arabic: "هود", era: "Ancient Arabia · exact date unknown", refs: ["11:50", "7:65"], takeaways: ["Power without gratitude becomes arrogance.", "Prophets called people to worship Allah alone.", "Seeking forgiveness is a source of strength."] },
+      { name: "Salih", arabic: "صالح", era: "Ancient Arabia · exact date unknown", refs: ["11:61", "7:73"], takeaways: ["Clear signs demand a responsible response.", "Corruption of the earth is a moral failure.", "Do not abuse what Allah gives as a trust."] },
+      { name: "Ibrahim", arabic: "إبراهيم", era: "Early 2nd millennium BCE · traditional estimate", refs: ["6:76", "2:124"], takeaways: ["Question inherited falsehood with sincerity.", "True leadership is built through tested obedience.", "Tawhid brings clarity and courage."] },
+      { name: "Lut", arabic: "لوط", era: "Era of Ibrahim · traditional sequence", refs: ["7:80", "11:77"], takeaways: ["Moral courage may require standing apart.", "Protect guests and vulnerable people.", "Persistence in public wrongdoing has consequences."] },
+      { name: "Ismail", arabic: "إسماعيل", era: "Early 2nd millennium BCE · traditional estimate", refs: ["19:54", "2:127"], takeaways: ["Keep promises faithfully.", "Worship is strengthened within the family.", "Great work should be accompanied by humble prayer."] },
+      { name: "Ishaq", arabic: "إسحاق", era: "Early 2nd millennium BCE · traditional estimate", refs: ["11:71", "37:112"], takeaways: ["Allah can bring hope after long waiting.", "Blessings should lead to gratitude.", "Prophetic guidance continued across generations."] },
+      { name: "Yaqub", arabic: "يعقوب", era: "2nd millennium BCE · traditional estimate", refs: ["12:6", "12:83"], takeaways: ["Beautiful patience does not deny grief.", "Place hope in Allah during uncertainty.", "Give sincere guidance to the next generation."] },
+      { name: "Yusuf", arabic: "يوسف", era: "2nd millennium BCE · traditional estimate", refs: ["12:23", "12:92"], takeaways: ["Integrity matters most when temptation is private.", "Patience and excellence can coexist in hardship.", "Forgiveness is stronger than revenge."] },
+      { name: "Ayyub", arabic: "أيوب", era: "Ancient era · exact date unknown", refs: ["21:83", "38:44"], takeaways: ["Pain can be expressed without abandoning faith.", "Patience includes continuing to turn to Allah.", "Relief should deepen gratitude."] },
+      { name: "Shuayb", arabic: "شعيب", era: "After Ibrahim · exact date unknown", refs: ["11:84", "7:85"], takeaways: ["Commercial honesty is part of worship.", "Faith must affect public and economic conduct.", "Reform begins with practising what we teach."] },
+      { name: "Musa", arabic: "موسى", era: "Late 2nd millennium BCE · traditional estimate", refs: ["20:11", "28:7"], takeaways: ["Allah prepares people through unexpected paths.", "Speak truth even before oppressive power.", "Ask Allah for help and communicate clearly."] },
+      { name: "Harun", arabic: "هارون", era: "Era of Musa · traditional sequence", refs: ["20:29", "20:90"], takeaways: ["Leadership can be shared.", "Gentleness and clarity both matter in correction.", "Resist pressure when a community goes astray."] },
+      { name: "Dhul-Kifl", arabic: "ذو الكفل", era: "Date unknown", refs: ["21:85", "38:48"], takeaways: ["Patience is repeatedly honoured.", "Righteousness may be quiet rather than dramatic.", "Remain consistent even when little is recorded about you."] },
+      { name: "Dawud", arabic: "داود", era: "Around 1000 BCE · approximate", refs: ["38:17", "38:26"], takeaways: ["Power must be governed by justice.", "Return to Allah quickly after an error.", "Strength and worship can exist together."] },
+      { name: "Sulayman", arabic: "سليمان", era: "10th century BCE · approximate", refs: ["27:15", "38:35"], takeaways: ["Knowledge and authority are gifts, not personal entitlement.", "Gratitude protects the heart from arrogance.", "Use power in service of justice and faith."] },
+      { name: "Ilyas", arabic: "إلياس", era: "9th century BCE · approximate", refs: ["37:123", "6:85"], takeaways: ["Challenge false worship clearly.", "Popularity does not determine truth.", "Righteousness links the prophetic mission across time."] },
+      { name: "Al-Yasa", arabic: "اليسع", era: "9th century BCE · approximate", refs: ["6:86", "38:48"], takeaways: ["Faithful service remains valuable even when details are few.", "Good character earns lasting mention.", "Prophetic work continues across generations."] },
+      { name: "Yunus", arabic: "يونس", era: "8th century BCE · approximate", refs: ["21:87", "37:139"], takeaways: ["Do not give up on people too quickly.", "Admit mistakes and call upon Allah in distress.", "Repentance can transform an entire community."] },
+      { name: "Zakariya", arabic: "زكريا", era: "Late 1st century BCE · approximate", refs: ["19:2", "3:38"], takeaways: ["Make hopeful du'a even when circumstances look impossible.", "Private devotion can be deeply powerful.", "Care for faith beyond your own lifetime."] },
+      { name: "Yahya", arabic: "يحيى", era: "Turn of the 1st century CE · approximate", refs: ["19:12", "3:39"], takeaways: ["Wisdom is not limited to old age.", "Purity and compassion strengthen knowledge.", "Hold firmly to revelation."] },
+      { name: "Isa", arabic: "عيسى", era: "1st century CE", refs: ["3:45", "19:30"], takeaways: ["Allah's creative power is unlimited.", "Prophets call people to worship Allah.", "Compassion and truth belong together."] },
+      { name: "Muhammad", arabic: "محمد", era: "570–632 CE", refs: ["33:40", "21:107"], takeaways: ["Prophetic revelation reaches its completion with Muhammad ﷺ.", "Mercy is central to his mission.", "Following revelation should shape character and community."] }
+    ];
+
     const pages = {
       home: document.getElementById("homePage"),
       quran: document.getElementById("quranPage"),
+      hadith: document.getElementById("hadithPage"),
+      prophets: document.getElementById("prophetsPage"),
       asmaul: document.getElementById("asmaulPage"),
       islam: document.getElementById("islamPage"),
       iman: document.getElementById("imanPage")
@@ -252,13 +291,18 @@ const API_BASE = "https://api.alquran.cloud/v1";
       });
 
       document.getElementById("navLinks").classList.remove("open");
+      document.getElementById("menuButton").setAttribute("aria-expanded", "false");
       window.scrollTo({ top: 0, behavior: "smooth" });
 
       if (name === "quran" && state.surahs.length === 0) loadSurahs();
+      if (name === "hadith" && !state.hadithLoaded) loadHadiths(1);
+      if (name === "prophets") openProphet(state.currentProphet);
 
       const titles = {
         home: "Jundullah | Islamic Learning",
         quran: "The Qur'an | Jundullah",
+        hadith: "Sahih al-Bukhari | Jundullah",
+        prophets: "The Prophets | Jundullah",
         asmaul: "Names of Allah | Jundullah",
         islam: "Pillars of Islam | Jundullah",
         iman: "Pillars of Faith | Jundullah"
@@ -271,7 +315,9 @@ const API_BASE = "https://api.alquran.cloud/v1";
     });
 
     document.getElementById("menuButton").addEventListener("click", () => {
-      document.getElementById("navLinks").classList.toggle("open");
+      const menu = document.getElementById("navLinks");
+      const isOpen = menu.classList.toggle("open");
+      document.getElementById("menuButton").setAttribute("aria-expanded", String(isOpen));
     });
 
     function escapeHTML(value) {
@@ -289,6 +335,12 @@ const API_BASE = "https://api.alquran.cloud/v1";
       const result = await response.json();
       if (result.code !== 200 || !result.data) throw new Error("The API returned an unexpected response.");
       return result.data;
+    }
+
+    async function fetchExternalJSON(url) {
+      const response = await fetch(url, { headers: { Accept: "application/json" } });
+      if (!response.ok) throw new Error(`Request failed with status ${response.status}`);
+      return response.json();
     }
 
     async function loadSurahs() {
@@ -474,7 +526,6 @@ const API_BASE = "https://api.alquran.cloud/v1";
       const surah = mode === "surah";
       document.getElementById("surahMode").classList.toggle("hidden", !surah);
       document.getElementById("pageMode").classList.toggle("hidden", surah);
-      document.getElementById("bookmarkView").classList.add("hidden");
       document.getElementById("surahModeButton").classList.toggle("active", surah);
       document.getElementById("pageModeButton").classList.toggle("active", !surah);
 
@@ -528,6 +579,363 @@ const API_BASE = "https://api.alquran.cloud/v1";
         state.arabicSize = Math.max(22, state.arabicSize - 3);
         applyArabicSize();
       });
+    });
+
+    function getNestedValue(object, paths) {
+      for (const path of paths) {
+        const value = path.split(".").reduce((current, key) => current?.[key], object);
+        if (value !== undefined && value !== null && value !== "") return value;
+      }
+      return "";
+    }
+
+    function extractHadithItems(payload) {
+      const queue = [payload];
+      const visited = new Set();
+
+      while (queue.length) {
+        const value = queue.shift();
+        if (!value || visited.has(value)) continue;
+        if (typeof value === "object") visited.add(value);
+        if (Array.isArray(value)) return value;
+
+        if (typeof value === "object") {
+          for (const key of ["hadiths", "items", "results", "data", "result", "hadith"]) {
+            if (value[key] !== undefined) queue.push(value[key]);
+          }
+        }
+      }
+
+      const possibleHadith = payload?.data || payload;
+      return possibleHadith && typeof possibleHadith === "object" ? [possibleHadith] : [];
+    }
+
+    function normaliseHadith(item, fallbackNumber) {
+      const number = getNestedValue(item, [
+        "hadithNumber", "hadith_number", "hadithnumber", "number", "id", "reference.hadith"
+      ]) || fallbackNumber;
+      const arabic = getNestedValue(item, [
+        "arabic", "arabicText", "hadithArabic", "text.arabic", "hadith.arabic", "text_ar"
+      ]);
+      const english = getNestedValue(item, [
+        "english", "englishText", "hadithEnglish", "text.english", "hadith.english", "translation", "text_en", "text"
+      ]);
+      const narrator = getNestedValue(item, [
+        "narrator", "englishNarrator", "rawi", "hadith.narrator"
+      ]);
+      const book = getNestedValue(item, [
+        "book.name", "bookName", "book", "chapter.book", "reference.book"
+      ]);
+      const chapter = getNestedValue(item, [
+        "chapter.name", "chapter.title", "chapterName", "chapter", "heading"
+      ]);
+
+      return {
+        number: String(number),
+        arabic: typeof arabic === "string" ? arabic : "",
+        english: typeof english === "string" ? english : "",
+        narrator: typeof narrator === "string" ? narrator : "",
+        book: typeof book === "string" ? book : "",
+        chapter: typeof chapter === "string" ? chapter : ""
+      };
+    }
+
+    function renderHadiths(items) {
+      const grid = document.getElementById("hadithGrid");
+      const hadiths = items.map((item, index) => normaliseHadith(item, index + 1));
+
+      if (!hadiths.length || hadiths.every(item => !item.arabic && !item.english)) {
+        grid.innerHTML = `<div class="status">No matching hadith was returned.</div>`;
+        return;
+      }
+
+      grid.innerHTML = hadiths.map(hadith => {
+        const preview = hadith.english
+          ? `${hadith.english.slice(0, 190)}${hadith.english.length > 190 ? "…" : ""}`
+          : "Open to read the Arabic text and available details.";
+        const reference = `Sahih al-Bukhari ${hadith.number}`;
+
+        return `
+          <details class="hadith-card">
+            <summary>
+              <span class="hadith-reference">${escapeHTML(reference)}</span>
+              <h3>${escapeHTML(hadith.chapter || hadith.book || "Hadith")}</h3>
+              <p>${escapeHTML(preview)}</p>
+              <span class="name-open-label">Open hadith</span>
+            </summary>
+            <div class="hadith-content">
+              ${hadith.narrator ? `<p class="hadith-narrator">${escapeHTML(hadith.narrator)}</p>` : ""}
+              ${hadith.arabic ? `<div class="hadith-arabic" lang="ar" dir="rtl">${escapeHTML(hadith.arabic)}</div>` : ""}
+              ${hadith.english ? `<div class="hadith-english"><div class="translation-label">English meaning</div><p>${escapeHTML(hadith.english)}</p></div>` : ""}
+              <div class="meaning-note">Reference: ${escapeHTML(reference)}${hadith.book ? ` · ${escapeHTML(hadith.book)}` : ""}</div>
+            </div>
+          </details>
+        `;
+      }).join("");
+    }
+
+    let fallbackBukhariPromise = null;
+
+    function loadFallbackBukhari() {
+      if (fallbackBukhariPromise) return fallbackBukhariPromise;
+
+      fallbackBukhariPromise = Promise.all([
+        fetchExternalJSON(`${HADITH_CDN_BASE}/eng-bukhari.min.json`),
+        fetchExternalJSON(`${HADITH_CDN_BASE}/ara-bukhari.min.json`)
+      ]).then(([englishPayload, arabicPayload]) => {
+        const englishItems = extractHadithItems(englishPayload);
+        const arabicItems = extractHadithItems(arabicPayload);
+        const arabicByNumber = new Map(
+          arabicItems.map((item, index) => {
+            const hadith = normaliseHadith(item, index + 1);
+            return [hadith.number, hadith.arabic || hadith.english];
+          })
+        );
+
+        return englishItems.map((item, index) => {
+          const hadith = normaliseHadith(item, index + 1);
+          return {
+            ...item,
+            hadithNumber: hadith.number,
+            english: hadith.english,
+            arabic: arabicByNumber.get(hadith.number) || ""
+          };
+        });
+      });
+
+      return fallbackBukhariPromise;
+    }
+
+    async function getFallbackHadithPage(page, query) {
+      const allHadiths = await loadFallbackBukhari();
+      const filtered = query
+        ? allHadiths.filter((item, index) => {
+            const hadith = normaliseHadith(item, index + 1);
+            const haystack = `${hadith.english} ${hadith.arabic} ${hadith.chapter} ${hadith.book}`.toLowerCase();
+            return haystack.includes(query.toLowerCase());
+          })
+        : allHadiths;
+      const start = query ? 0 : (page - 1) * 12;
+      return filtered.slice(start, query ? 25 : start + 12);
+    }
+
+    async function loadHadiths(page = 1, query = state.hadithQuery) {
+      const status = document.getElementById("hadithStatus");
+      const grid = document.getElementById("hadithGrid");
+      const pagination = document.getElementById("hadithPagination");
+      page = Math.max(1, Number(page) || 1);
+
+      status.classList.remove("hidden", "error");
+      status.textContent = query ? `Searching Sahih al-Bukhari for “${query}”...` : `Loading Sahih al-Bukhari page ${page}...`;
+      grid.classList.add("hidden");
+      pagination.classList.add("hidden");
+
+      try {
+        const url = query
+          ? `${UMMAH_API_BASE}/hadith/search?q=${encodeURIComponent(query)}&collection=bukhari&limit=25`
+          : `${UMMAH_API_BASE}/hadith/bukhari?page=${page}&limit=12`;
+        let items;
+
+        try {
+          const payload = await fetchExternalJSON(url);
+          items = extractHadithItems(payload);
+          if (!items.length) throw new Error("Primary hadith API returned no results");
+        } catch (primaryError) {
+          console.warn("Primary hadith API unavailable; using the static dataset fallback.", primaryError);
+          status.textContent = "The primary API is unavailable. Loading the backup Sahih al-Bukhari dataset...";
+          items = await getFallbackHadithPage(page, query);
+        }
+
+        renderHadiths(items);
+        state.hadithLoaded = true;
+        state.hadithPage = page;
+        state.hadithQuery = query;
+
+        status.classList.add("hidden");
+        grid.classList.remove("hidden");
+        if (!query) {
+          pagination.classList.remove("hidden");
+          document.getElementById("hadithPageLabel").textContent = `Page ${page}`;
+          document.getElementById("previousHadithPage").disabled = page === 1;
+        }
+      } catch (error) {
+        console.error(error);
+        status.classList.add("error");
+        status.innerHTML = `
+          <strong>Unable to load Sahih al-Bukhari right now.</strong><br>
+          <span>The external API may be unavailable or may have blocked browser requests.</span><br>
+          <button class="button secondary" onclick="loadHadiths(${page})" style="margin-top:12px">Try again</button>
+        `;
+      }
+    }
+
+    async function loadRandomHadith() {
+      const status = document.getElementById("hadithStatus");
+      const grid = document.getElementById("hadithGrid");
+      status.classList.remove("hidden", "error");
+      status.textContent = "Loading a random hadith...";
+      grid.classList.add("hidden");
+      document.getElementById("hadithPagination").classList.add("hidden");
+
+      try {
+        let items;
+        try {
+          const payload = await fetchExternalJSON(`${UMMAH_API_BASE}/hadith/random?collection=bukhari`);
+          items = extractHadithItems(payload);
+          if (!items.length) throw new Error("Primary hadith API returned no result");
+        } catch (primaryError) {
+          console.warn("Primary random endpoint unavailable; using the static dataset fallback.", primaryError);
+          const allHadiths = await loadFallbackBukhari();
+          items = [allHadiths[Math.floor(Math.random() * allHadiths.length)]];
+        }
+        renderHadiths(items);
+        status.classList.add("hidden");
+        grid.classList.remove("hidden");
+      } catch (error) {
+        console.error(error);
+        status.classList.add("error");
+        status.textContent = "Unable to load a random hadith right now. Please try again.";
+      }
+    }
+
+    document.getElementById("searchHadithButton").addEventListener("click", () => {
+      const query = document.getElementById("hadithSearch").value.trim();
+      loadHadiths(1, query);
+    });
+    document.getElementById("hadithSearch").addEventListener("keydown", event => {
+      if (event.key === "Enter") loadHadiths(1, event.currentTarget.value.trim());
+    });
+    document.getElementById("randomHadithButton").addEventListener("click", loadRandomHadith);
+    document.getElementById("previousHadithPage").addEventListener("click", () => loadHadiths(state.hadithPage - 1, ""));
+    document.getElementById("nextHadithPage").addEventListener("click", () => loadHadiths(state.hadithPage + 1, ""));
+
+    const prophetCache = new Map();
+
+    function renderProphetTimeline() {
+      document.getElementById("prophetTimeline").innerHTML = prophets.map((prophet, index) => `
+        <button class="timeline-point ${index === state.currentProphet ? "active" : ""}" data-prophet-index="${index}" aria-label="Open ${escapeHTML(prophet.name)}">
+          <span class="timeline-dot"></span>
+          <strong>${escapeHTML(prophet.name)}</strong>
+          <span lang="ar" dir="rtl">${prophet.arabic}</span>
+          <small>${escapeHTML(prophet.era.split(" · ")[0])}</small>
+        </button>
+      `).join("");
+
+      document.querySelectorAll(".timeline-point").forEach(button => {
+        button.addEventListener("click", () => openProphet(Number(button.dataset.prophetIndex)));
+      });
+    }
+
+    function findCommentaryText(payload) {
+      const preferredKeys = new Set(["text", "tafsir", "content", "commentary", "english", "translation"]);
+      const root = payload?.data ?? payload;
+      if (typeof root === "string") return root.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+      const queue = [root];
+      const seen = new Set();
+      let best = "";
+
+      while (queue.length) {
+        const value = queue.shift();
+        if (!value || typeof value !== "object" || seen.has(value)) continue;
+        seen.add(value);
+
+        for (const [key, child] of Object.entries(value)) {
+          if (typeof child === "string" && preferredKeys.has(key.toLowerCase()) && child.length > best.length) {
+            best = child;
+          } else if (child && typeof child === "object") {
+            queue.push(child);
+          }
+        }
+      }
+
+      return best.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+    }
+
+    async function loadProphetPassage(reference) {
+      const [surah, ayah] = reference.split(":");
+      const editions = await fetchJSON(`${API_BASE}/ayah/${reference}/editions/quran-uthmani,en.sahih`);
+      const arabic = editions.find(edition => edition.edition?.identifier === "quran-uthmani") || editions[0];
+      const english = editions.find(edition => edition.edition?.identifier === "en.sahih") || editions[1];
+      let commentary = "";
+
+      try {
+        const tafsir = await fetchExternalJSON(`${UMMAH_API_BASE}/tafsir/ibn_kathir/surah/${surah}/ayah/${ayah}`);
+        commentary = findCommentaryText(tafsir);
+      } catch (error) {
+        console.warn(`Tafsir unavailable for ${reference}`, error);
+      }
+
+      return {
+        reference,
+        arabic: arabic?.text || "",
+        english: english?.text || "English meaning unavailable.",
+        surahName: arabic?.surah?.englishName || `Surah ${surah}`,
+        commentary
+      };
+    }
+
+    function renderProphetStory(passages) {
+      return passages.map(passage => {
+        const [surah, ayah] = passage.reference.split(":");
+        return `
+          <section class="prophet-passage">
+            <div class="prophet-passage-label">${escapeHTML(passage.surahName)} ${escapeHTML(passage.reference)}</div>
+            <div class="prophet-verse-arabic" lang="ar" dir="rtl">${escapeHTML(passage.arabic)}</div>
+            <p class="prophet-translation">${escapeHTML(passage.english)}</p>
+            ${passage.commentary
+              ? `<div class="prophet-commentary"><h3>Commentary from Tafsir Ibn Kathir</h3><p>${escapeHTML(passage.commentary)}</p></div>`
+              : `<div class="meaning-note">Detailed commentary could not be loaded. The Qur'anic text and translation above are still available.</div>`}
+            <a class="source-link" href="https://quran.com/${surah}/${ayah}" target="_blank" rel="noopener noreferrer">Open this verse on Quran.com ↗</a>
+          </section>
+        `;
+      }).join("");
+    }
+
+    async function openProphet(index) {
+      index = Math.max(0, Math.min(prophets.length - 1, Number(index) || 0));
+      state.currentProphet = index;
+      const prophet = prophets[index];
+      const status = document.getElementById("prophetStatus");
+      const story = document.getElementById("prophetStory");
+      const requestId = (state.prophetRequestId || 0) + 1;
+      state.prophetRequestId = requestId;
+
+      document.getElementById("prophetTitle").textContent = `${prophet.name} — ${prophet.arabic}`;
+      document.getElementById("prophetEra").textContent = prophet.era;
+      document.getElementById("prophetOrder").textContent = `${index + 1} of ${prophets.length}`;
+      document.getElementById("prophetReferences").textContent = `Selected Qur'anic references: ${prophet.refs.join(", ")}`;
+      document.getElementById("prophetTakeaways").innerHTML = prophet.takeaways.map(point => `<li>${escapeHTML(point)}</li>`).join("");
+
+      document.querySelectorAll(".timeline-point").forEach((button, buttonIndex) => {
+        button.classList.toggle("active", buttonIndex === index);
+      });
+
+      status.classList.remove("hidden", "error");
+      status.textContent = `Loading the Qur'anic account of ${prophet.name}...`;
+      story.classList.add("hidden");
+
+      try {
+        if (!prophetCache.has(index)) {
+          prophetCache.set(index, await Promise.all(prophet.refs.map(loadProphetPassage)));
+        }
+        if (requestId !== state.prophetRequestId) return;
+
+        story.innerHTML = renderProphetStory(prophetCache.get(index));
+        status.classList.add("hidden");
+        story.classList.remove("hidden");
+      } catch (error) {
+        console.error(error);
+        if (requestId !== state.prophetRequestId) return;
+        status.classList.add("error");
+        status.innerHTML = `<strong>Unable to load this account right now.</strong><br><button class="button secondary" onclick="openProphet(${index})" style="margin-top:12px">Try again</button>`;
+      }
+    }
+
+    document.getElementById("timelinePrevious").addEventListener("click", () => {
+      document.getElementById("prophetTimeline").scrollBy({ left: -520, behavior: "smooth" });
+    });
+    document.getElementById("timelineNext").addEventListener("click", () => {
+      document.getElementById("prophetTimeline").scrollBy({ left: 520, behavior: "smooth" });
     });
 
     function renderNames(items) {
@@ -597,6 +1005,7 @@ const API_BASE = "https://api.alquran.cloud/v1";
     }
 
     applyArabicSize();
+    renderProphetTimeline();
     renderNames(namesOfAllah);
     renderPillars("islamPillars", islamPillars, "islam");
     renderPillars("faithPillars", faithPillars, "faith");

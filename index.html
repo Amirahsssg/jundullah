@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Jundullah — a calm digital Islamic learning and Qur'an reading website." />
   <title>Jundullah | Islamic Learning</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="script.js"></script>
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js" defer></script>
 </head>
 
 <body>
-  <header class="topbar"></header>
+  <header class="topbar">
     <div class="container navbar">
       <button class="brand" onclick="showPage('home')" aria-label="Go to home">
         <span class="brand-mark">ج</span>
@@ -20,13 +20,15 @@
       <nav class="nav-links" id="navLinks" aria-label="Main navigation">
         <button class="nav-link active" data-page="home">Home</button>
         <button class="nav-link" data-page="quran">Qur'an</button>
+        <button class="nav-link" data-page="hadith">Sahih al-Bukhari</button>
+        <button class="nav-link" data-page="prophets">Prophets</button>
         <button class="nav-link" data-page="asmaul">Names of Allah</button>
         <button class="nav-link" data-page="islam">Pillars of Islam</button>
         <button class="nav-link" data-page="iman">Pillars of Faith</button>
       </nav>
 
       <div class="nav-actions">
-        <button class="icon-button menu-button" id="menuButton" aria-label="Open menu">☰</button>
+        <button class="icon-button menu-button" id="menuButton" aria-label="Open menu" aria-expanded="false">☰</button>
       </div>
     </div>
   </header>
@@ -39,11 +41,11 @@
             <div class="eyebrow">Digital Islamic Learning</div>
             <h1>Learn Islam with clarity and calm.</h1>
             <p class="lead">
-              Jundullah provides a focused place to read the Qur'an and learn the foundations of Islam in clear English.
+              Read the Qur'an, explore Sahih al-Bukhari, and learn the foundations of Islam through a focused and accessible experience.
             </p>
             <div class="hero-actions">
               <button class="button primary" onclick="showPage('quran')">Read the Qur'an</button>
-              <button class="button secondary" onclick="showPage('islam')">Explore the Pillars</button>
+              <button class="button secondary" onclick="showPage('prophets')">Explore the Prophets</button>
             </div>
           </div>
 
@@ -73,10 +75,22 @@
               <p>Read by surah or in a page-style Mushaf view, with English meaning.</p>
             </button>
 
+            <button class="card feature-card" onclick="showPage('hadith')">
+              <div class="feature-icon">ح</div>
+              <h3>Sahih al-Bukhari</h3>
+              <p>Browse, search, and open hadith with Arabic, English, and references.</p>
+            </button>
+
+            <button class="card feature-card" onclick="showPage('prophets')">
+              <div class="feature-icon">↝</div>
+              <h3>The Prophets</h3>
+              <p>Travel through a clickable timeline and study Qur'anic accounts and lessons.</p>
+            </button>
+
             <button class="card feature-card" onclick="showPage('asmaul')">
               <div class="feature-icon">✦</div>
               <h3>Names of Allah</h3>
-              <p>Learn selected names of Allah with transliteration and English meaning.</p>
+              <p>Learn all 99 names with transliteration, meaning, and reflection.</p>
             </button>
 
             <button class="card feature-card" onclick="showPage('islam')">
@@ -100,9 +114,7 @@
         <div class="page-heading">
           <div class="eyebrow">The Noble Qur'an</div>
           <h2>Choose your reading format</h2>
-          <p class="lead">
-            Read by surah using individual verse cards, or switch to Mushaf Page View for a continuous page-style presentation.
-          </p>
+          <p class="lead">Read by surah using individual verse cards, or switch to Mushaf Page View for a continuous page-style presentation.</p>
         </div>
 
         <div class="toolbar">
@@ -143,7 +155,7 @@
             </div>
 
             <div class="notice" style="margin-bottom:20px">
-              The English text is a translation of meaning. A translation helps readers understand the message, but it is not identical to the Arabic Qur'an itself.
+              The English text is a translation of meaning. For deeper explanation and context, consult recognised tafsir and qualified teachers.
             </div>
 
             <div id="verseStatus" class="status">Loading verses...</div>
@@ -156,7 +168,7 @@
             <div>
               <div class="eyebrow">Mushaf-style reading</div>
               <h2>Qur'an Page <span id="currentPageHeading">1</span></h2>
-              <p class="muted">Read a page-style layout based on the traditional 604-page sequence. Hover over an ayah to see its English meaning.</p>
+              <p class="muted">Read a page-style layout based on the traditional 604-page sequence. Focus or hover over an ayah to see its English meaning.</p>
             </div>
 
             <div class="page-selector">
@@ -168,13 +180,84 @@
           </div>
 
           <div id="pageStatus" class="status">Choose a page to begin.</div>
-
           <article id="mushafSheet" class="mushaf-sheet hidden">
             <div class="mushaf-page-number">Page <span id="mushafPageNumber">1</span></div>
             <div id="mushafArabic" class="mushaf-arabic"></div>
-            <div class="mushaf-hover-help">Hover over an ayah to see its English meaning.</div>
+            <div class="mushaf-hover-help">Focus or hover over an ayah to see its English meaning.</div>
           </article>
         </div>
+      </div>
+    </section>
+
+    <section class="page hidden" id="hadithPage">
+      <div class="container">
+        <div class="page-heading">
+          <div class="eyebrow">Prophetic tradition</div>
+          <h2>Sahih al-Bukhari</h2>
+          <p class="lead">Browse the collection, search by subject, or open a random hadith. Each result keeps its collection reference visible.</p>
+        </div>
+
+        <div class="toolbar hadith-toolbar">
+          <label class="search-box">
+            <span class="search-symbol">⌕</span>
+            <input id="hadithSearch" type="search" placeholder="Search Sahih al-Bukhari, e.g. intention or prayer..." />
+          </label>
+          <button class="button primary" id="searchHadithButton">Search</button>
+          <button class="button secondary" id="randomHadithButton">Random hadith</button>
+        </div>
+
+        <div class="notice source-notice">
+          Hadith text is loaded from UmmahAPI, with the open-source Fawaz Ahmed dataset as a backup. References should be retained when quoting, and detailed legal conclusions should be checked with qualified scholarship.
+        </div>
+
+        <div id="hadithStatus" class="status">Open this page to load Sahih al-Bukhari.</div>
+        <div id="hadithGrid" class="hadith-list hidden"></div>
+
+        <div class="pagination hidden" id="hadithPagination">
+          <button class="button secondary" id="previousHadithPage">← Previous</button>
+          <span class="muted" id="hadithPageLabel">Page 1</span>
+          <button class="button secondary" id="nextHadithPage">Next →</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="page hidden" id="prophetsPage">
+      <div class="container">
+        <div class="page-heading">
+          <div class="eyebrow">Messengers and teachers</div>
+          <h2>The Prophets in the Qur'an</h2>
+          <p class="lead">Select a prophet on the timeline to load related Qur'anic passages, commentary, and practical takeaways.</p>
+        </div>
+
+        <div class="notice timeline-notice">
+          The Qur'an does not provide exact calendar years for most prophets. Early labels therefore show an era or “date unknown”; later dates are approximate historical placement, not revealed chronology.
+          Long-form text is not stored in this website's code: relevant Qur'anic passages and available tafsir are requested only after you select a prophet.
+        </div>
+
+        <div class="timeline-shell" aria-label="Timeline of the prophets">
+          <button class="timeline-scroll timeline-scroll-left" id="timelinePrevious" aria-label="Scroll timeline left">←</button>
+          <div class="prophet-timeline" id="prophetTimeline" tabindex="0"></div>
+          <button class="timeline-scroll timeline-scroll-right" id="timelineNext" aria-label="Scroll timeline right">→</button>
+        </div>
+
+        <article class="prophet-reader" id="prophetReader">
+          <div class="prophet-reader-heading">
+            <div>
+              <div class="eyebrow" id="prophetEra">Beginning of humanity</div>
+              <h2 id="prophetTitle">Adam — آدم</h2>
+              <p class="muted" id="prophetReferences"></p>
+            </div>
+            <span class="prophet-order" id="prophetOrder">1 of 25</span>
+          </div>
+
+          <div id="prophetStatus" class="status">Choose a prophet to load the Qur'anic account.</div>
+          <div id="prophetStory" class="prophet-story hidden"></div>
+
+          <section class="takeaways">
+            <div class="eyebrow">Key takeaways</div>
+            <ul id="prophetTakeaways"></ul>
+          </section>
+        </article>
       </div>
     </section>
 
@@ -183,10 +266,7 @@
         <div class="page-heading">
           <div class="eyebrow">Knowing Allah</div>
           <h2>The 99 Names of Allah</h2>
-          <p class="lead">
-            Search the names below, then click a card to open a fuller explanation of its meaning,
-            spiritual significance, and a practical reflection for daily life.
-          </p>
+          <p class="lead">Search the names below, then click a card to open its meaning, significance, and a practical reflection.</p>
         </div>
 
         <div class="toolbar">
@@ -197,7 +277,6 @@
         </div>
 
         <div id="asmaulGrid" class="grid grid-4"></div>
-
         <div class="notice" style="margin-top:25px">
           This page presents the commonly transmitted collection of 99 Names. English labels are approximate; study the divine names through the Qur'an, authentic Sunnah, and reliable scholarship.
         </div>
@@ -211,7 +290,6 @@
           <h2>The Five Pillars of Islam</h2>
           <p class="lead">Click any pillar to open a deeper explanation.</p>
         </div>
-
         <div id="islamPillars"></div>
       </div>
     </section>
@@ -223,7 +301,6 @@
           <h2>The Six Pillars of Faith</h2>
           <p class="lead">Click any belief to study what it means and why it matters.</p>
         </div>
-
         <div id="faithPillars"></div>
       </div>
     </section>
@@ -233,12 +310,10 @@
     <div class="container footer-grid">
       <div>
         <strong>Jundullah</strong>
-        <p>
-          A learning and reference website. It does not replace qualified scholars, teachers, or formal religious guidance.
-        </p>
+        <p>A learning and reference website. It does not replace qualified scholars, teachers, or formal religious guidance.</p>
       </div>
       <div>
-        <small>Qur'an text and page data: Al Quran Cloud API · English meaning: Sahih International edition</small>
+        <small>Qur'an: Al Quran Cloud · Hadith: UmmahAPI with an open-source static fallback · Tafsir: UmmahAPI.</small>
       </div>
     </div>
   </footer>
